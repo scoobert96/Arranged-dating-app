@@ -1,0 +1,1244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Arranged</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --teal:        #1a7a7a;
+      --teal-mid:    #2ab5b5;
+      --teal-light:  #e8f4f4;
+      --teal-pale:   #f2fafa;
+      --white:       #ffffff;
+      --ink:         #1a1a1a;
+      --ink-soft:    #555555;
+      --ink-muted:   #999999;
+      --danger:      #c0392b;
+      --danger-light:#fdecea;
+      --gold:        #c9a96e;
+      --radius:      16px;
+      --shadow:      0 4px 24px rgba(0,0,0,0.10);
+      --shadow-sm:   0 2px 10px rgba(0,0,0,0.07);
+    }
+
+    html, body {
+      height: 100%;
+      background: #f0f5f5;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      color: var(--ink);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .app-shell {
+      max-width: 430px;
+      margin: 0 auto;
+      height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      background: var(--white);
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 0 40px rgba(0,0,0,0.12);
+    }
+
+    /* ── Header ── */
+    .app-header {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px 20px 12px;
+      background: var(--white);
+      border-bottom: 1px solid var(--teal-light);
+      position: relative;
+      flex-shrink: 0;
+      z-index: 10;
+    }
+    .app-header .back-btn {
+      position: absolute;
+      left: 16px;
+      background: none;
+      border: none;
+      font-size: 22px;
+      color: var(--teal);
+      cursor: pointer;
+      padding: 4px 8px;
+      line-height: 1;
+    }
+    .app-header h2 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--ink);
+      letter-spacing: 0.02em;
+    }
+    .app-header .header-icon {
+      position: absolute;
+      right: 16px;
+      font-size: 20px;
+      color: var(--teal-mid);
+    }
+
+    .wordmark {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--teal);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    /* ── Screen ── */
+    .screen {
+      flex: 1;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior: contain;
+    }
+
+    /* ── Bottom Nav ── */
+    .bottom-nav {
+      display: flex;
+      border-top: 1px solid var(--teal-light);
+      background: var(--white);
+      flex-shrink: 0;
+      z-index: 20;
+    }
+    .nav-tab {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      padding: 10px 0 12px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--ink-muted);
+      font-family: 'Inter', sans-serif;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+    .nav-tab .nav-icon { font-size: 20px; }
+    .nav-tab.active { color: var(--teal); }
+
+    /* ════════════════════════════
+       DISCOVERY SCREEN
+    ════════════════════════════ */
+    .discovery-screen {
+      padding: 16px 16px 100px;
+    }
+
+    .profile-card {
+      background: var(--white);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      margin-bottom: 16px;
+    }
+
+    .photo-area {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 4/5;
+      background: var(--teal-light);
+      overflow: hidden;
+      cursor: pointer;
+    }
+    .photo-area img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: opacity 0.3s;
+    }
+    .photo-dots {
+      position: absolute;
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 5px;
+    }
+    .photo-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.5);
+      transition: background 0.2s;
+    }
+    .photo-dot.active { background: var(--white); }
+
+    .photo-overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+    }
+    .photo-tap-left, .photo-tap-right {
+      flex: 1;
+    }
+
+    .profile-name-overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 40px 20px 16px;
+      background: linear-gradient(to top, rgba(0,0,0,0.55) 0%, transparent 100%);
+    }
+    .profile-name-overlay h1 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--white);
+      text-shadow: 0 1px 4px rgba(0,0,0,0.3);
+    }
+    .profile-name-overlay .profile-city {
+      font-size: 13px;
+      color: rgba(255,255,255,0.85);
+      margin-top: 2px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .profile-body {
+      padding: 20px;
+    }
+    .profile-bio {
+      font-size: 15px;
+      line-height: 1.65;
+      color: var(--ink-soft);
+      margin-bottom: 20px;
+      font-style: italic;
+      font-family: 'Playfair Display', Georgia, serif;
+    }
+
+    .prompt-card {
+      border-left: 3px solid var(--teal-mid);
+      padding: 14px 16px;
+      margin-bottom: 14px;
+      background: var(--teal-pale);
+      border-radius: 0 var(--radius) var(--radius) 0;
+    }
+    .prompt-q {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--teal);
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+    .prompt-a {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 15px;
+      color: var(--ink);
+      line-height: 1.5;
+    }
+
+    .profile-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 16px;
+    }
+    .tag {
+      background: var(--teal-light);
+      color: var(--teal);
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    /* Action Buttons */
+    .action-buttons {
+      position: fixed;
+      bottom: 64px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 32px;
+      align-items: center;
+      z-index: 15;
+    }
+    .btn-pass {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: var(--white);
+      border: 2px solid var(--danger);
+      color: var(--danger);
+      font-size: 22px;
+      cursor: pointer;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.15s, background 0.15s;
+    }
+    .btn-pass:active { transform: scale(0.93); background: var(--danger-light); }
+
+    .btn-like {
+      width: 68px;
+      height: 68px;
+      border-radius: 50%;
+      background: var(--teal);
+      border: none;
+      color: var(--white);
+      font-size: 26px;
+      cursor: pointer;
+      box-shadow: 0 4px 16px rgba(26,122,122,0.35);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.15s, background 0.15s;
+    }
+    .btn-like:active { transform: scale(0.93); background: var(--teal-mid); }
+
+    .empty-state {
+      text-align: center;
+      padding: 60px 30px;
+    }
+    .empty-state .empty-icon { font-size: 52px; margin-bottom: 16px; }
+    .empty-state h2 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 22px;
+      color: var(--ink);
+      margin-bottom: 8px;
+    }
+    .empty-state p { font-size: 14px; color: var(--ink-muted); line-height: 1.6; }
+
+    /* ════════════════════════════
+       MATCH SCREEN
+    ════════════════════════════ */
+    .match-screen {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 24px 100px;
+      text-align: center;
+    }
+
+    .match-burst {
+      position: relative;
+      margin-bottom: 28px;
+    }
+    .match-burst::before {
+      content: '';
+      position: absolute;
+      inset: -16px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(42,181,181,0.18) 0%, transparent 70%);
+      animation: pulse 2s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.08); opacity: 0.7; }
+    }
+    .match-photo {
+      width: 130px;
+      height: 130px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 4px solid var(--white);
+      box-shadow: 0 0 0 3px var(--teal-mid), var(--shadow);
+    }
+
+    .match-label {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--teal-mid);
+      margin-bottom: 8px;
+    }
+    .match-headline {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--ink);
+      margin-bottom: 10px;
+    }
+    .match-subline {
+      font-size: 15px;
+      color: var(--ink-soft);
+      line-height: 1.6;
+      margin-bottom: 28px;
+    }
+    .match-subline strong { color: var(--teal); }
+
+    .friend-teaser {
+      background: var(--teal-pale);
+      border: 1px solid var(--teal-light);
+      border-radius: var(--radius);
+      padding: 20px;
+      width: 100%;
+      margin-bottom: 28px;
+    }
+    .friend-teaser .teaser-icon { font-size: 28px; margin-bottom: 8px; }
+    .friend-teaser h3 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 17px;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 6px;
+    }
+    .friend-teaser p { font-size: 13px; color: var(--ink-soft); line-height: 1.5; }
+
+    .btn-primary {
+      width: 100%;
+      padding: 16px;
+      background: var(--teal);
+      color: var(--white);
+      border: none;
+      border-radius: var(--radius);
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-bottom: 12px;
+      letter-spacing: 0.02em;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .btn-primary:active { background: var(--teal-mid); transform: scale(0.98); }
+
+    .btn-secondary {
+      width: 100%;
+      padding: 14px;
+      background: transparent;
+      color: var(--teal);
+      border: 1.5px solid var(--teal-mid);
+      border-radius: var(--radius);
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      letter-spacing: 0.02em;
+      transition: background 0.2s;
+    }
+    .btn-secondary:active { background: var(--teal-pale); }
+
+    /* ════════════════════════════
+       FRIEND APPROVAL SCREEN
+    ════════════════════════════ */
+    .approval-screen {
+      padding: 20px 16px 100px;
+    }
+
+    .approval-summary {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      background: var(--teal-pale);
+      border-radius: var(--radius);
+      padding: 16px;
+      margin-bottom: 20px;
+      border: 1px solid var(--teal-light);
+    }
+    .approval-summary img {
+      width: 68px;
+      height: 68px;
+      border-radius: 50%;
+      object-fit: cover;
+      flex-shrink: 0;
+      border: 2px solid var(--teal-mid);
+    }
+    .approval-summary-info { flex: 1; min-width: 0; }
+    .approval-summary-name {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    .vote-stats {
+      display: flex;
+      gap: 10px;
+    }
+    .vote-stat {
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-weight: 500;
+    }
+    .vote-stat.approved { color: var(--teal); }
+    .vote-stat.rejected { color: var(--danger); }
+    .vote-stat.pending  { color: var(--ink-muted); }
+
+    .progress-section { margin-bottom: 20px; }
+    .progress-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      color: var(--ink-soft);
+      margin-bottom: 7px;
+      font-weight: 500;
+    }
+    .progress-track {
+      height: 8px;
+      background: var(--teal-light);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(to right, var(--teal), var(--teal-mid));
+      border-radius: 4px;
+      transition: width 0.4s ease;
+    }
+
+    .friends-list { list-style: none; margin-bottom: 20px; }
+    .friend-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 13px 0;
+      border-bottom: 1px solid var(--teal-light);
+    }
+    .friend-item:last-child { border-bottom: none; }
+    .friend-avatar {
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+    .friend-name {
+      flex: 1;
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--ink);
+    }
+    .vote-badge {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 20px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .vote-badge.approved { background: var(--teal-light); color: var(--teal); }
+    .vote-badge.rejected { background: var(--danger-light); color: var(--danger); }
+    .vote-badge.pending  { background: #f0f0f0; color: var(--ink-muted); }
+
+    .simulate-btn {
+      width: 100%;
+      padding: 14px;
+      background: var(--white);
+      border: 1.5px dashed var(--teal-mid);
+      border-radius: var(--radius);
+      color: var(--teal);
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      margin-bottom: 16px;
+      transition: background 0.2s;
+    }
+    .simulate-btn:active { background: var(--teal-pale); }
+    .simulate-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+    .simulate-hint {
+      text-align: center;
+      font-size: 11px;
+      color: var(--ink-muted);
+      margin-bottom: 20px;
+    }
+
+    .unlocked-banner {
+      background: linear-gradient(135deg, var(--teal) 0%, var(--teal-mid) 100%);
+      border-radius: var(--radius);
+      padding: 24px;
+      text-align: center;
+      color: var(--white);
+      margin-bottom: 16px;
+    }
+    .unlocked-banner .banner-icon { font-size: 32px; margin-bottom: 10px; }
+    .unlocked-banner h3 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+    .unlocked-banner p { font-size: 13px; opacity: 0.88; margin-bottom: 16px; }
+    .btn-chat {
+      background: var(--white);
+      color: var(--teal);
+      border: none;
+      padding: 13px 28px;
+      border-radius: var(--radius);
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.15s;
+    }
+    .btn-chat:active { transform: scale(0.96); }
+
+    /* ════════════════════════════
+       MATCHES LIST SCREEN
+    ════════════════════════════ */
+    .matches-screen {
+      padding: 20px 16px 100px;
+    }
+    .matches-screen-title {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--ink);
+      margin-bottom: 6px;
+    }
+    .matches-screen-sub {
+      font-size: 13px;
+      color: var(--ink-muted);
+      margin-bottom: 20px;
+    }
+
+    .match-list-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px;
+      border-radius: var(--radius);
+      background: var(--white);
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 10px;
+      cursor: pointer;
+      transition: transform 0.15s;
+      border: 1px solid var(--teal-light);
+    }
+    .match-list-item:active { transform: scale(0.98); }
+    .match-list-img {
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+    .match-list-info { flex: 1; min-width: 0; }
+    .match-list-name {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 17px;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 3px;
+    }
+    .match-list-status {
+      font-size: 12px;
+      color: var(--ink-muted);
+    }
+    .match-list-status.unlocked-status { color: var(--teal); font-weight: 500; }
+    .match-list-action { flex-shrink: 0; }
+    .lock-icon { font-size: 20px; color: var(--ink-muted); }
+    .btn-chat-small {
+      background: var(--teal);
+      color: var(--white);
+      border: none;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .btn-chat-small:active { background: var(--teal-mid); }
+
+    .section-label {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--ink-muted);
+      margin-bottom: 10px;
+      margin-top: 20px;
+    }
+    .section-label:first-child { margin-top: 0; }
+
+    /* ════════════════════════════
+       ANIMATIONS
+    ════════════════════════════ */
+    .screen-enter {
+      animation: fadeSlideIn 0.25s ease-out;
+    }
+    @keyframes fadeSlideIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .match-screen {
+      animation: matchReveal 0.4s ease-out;
+    }
+    @keyframes matchReveal {
+      from { opacity: 0; transform: scale(0.96); }
+      to   { opacity: 1; transform: scale(1); }
+    }
+  </style>
+</head>
+<body>
+<div class="app-shell" id="app">
+  <!-- Rendered by JS -->
+</div>
+
+<script>
+// ══════════════════════════════════════════════
+// MOCK DATA
+// ══════════════════════════════════════════════
+
+const PROFILES = [
+  {
+    id: 1,
+    name: "Sophie",
+    age: 28,
+    city: "New York",
+    photos: [
+      "https://picsum.photos/seed/soph1/400/500",
+      "https://picsum.photos/seed/soph2/400/500",
+    ],
+    bio: "Art director by day, amateur chef by night. I believe a good meal is the finest form of intimacy.",
+    prompts: [
+      { q: "A non-negotiable for me is", a: "A Sunday morning with absolutely no plans." },
+      { q: "I'm looking for someone who", a: "Laughs at their own jokes and means it." },
+      { q: "My love language is", a: "Cooking something elaborate for no occasion at all." }
+    ],
+    tags: ["Art", "Cooking", "Travel", "Museums"],
+    likedYou: true
+  },
+  {
+    id: 2,
+    name: "Priya",
+    age: 26,
+    city: "San Francisco",
+    photos: [
+      "https://picsum.photos/seed/priya1/400/500",
+      "https://picsum.photos/seed/priya2/400/500",
+    ],
+    bio: "Biotech researcher who unwinds with pottery and very long hikes. I'm told I'm an excellent listener.",
+    prompts: [
+      { q: "The way to my heart is", a: "Bring me a good book and a pour-over." },
+      { q: "I will never stop talking about", a: "The utterly wild world of fungi." }
+    ],
+    tags: ["Science", "Pottery", "Hiking", "Books"],
+    likedYou: false
+  },
+  {
+    id: 3,
+    name: "Mara",
+    age: 30,
+    city: "Chicago",
+    photos: [
+      "https://picsum.photos/seed/mara1/400/500",
+      "https://picsum.photos/seed/mara2/400/500",
+    ],
+    bio: "Jazz pianist, vintage furniture hunter, connoisseur of hole-in-the-wall restaurants. Chronically over-caffeinated.",
+    prompts: [
+      { q: "My most irrational fear is", a: "Birds. All of them. Especially pigeons." },
+      { q: "A perfect day looks like", a: "Flea market in the morning, live music at midnight." },
+      { q: "I'm surprisingly good at", a: "Parallel parking on the first try." }
+    ],
+    tags: ["Jazz", "Vintage", "Food", "Piano"],
+    likedYou: true
+  },
+  {
+    id: 4,
+    name: "Elena",
+    age: 27,
+    city: "Austin",
+    photos: [
+      "https://picsum.photos/seed/elena1/400/500",
+      "https://picsum.photos/seed/elena2/400/500",
+    ],
+    bio: "Environmental lawyer who moonlights as a terrible but enthusiastic rock climber. The outdoors raised me.",
+    prompts: [
+      { q: "Green flag I look for", a: "You have a genuine opinion about something." },
+      { q: "I geek out about", a: "Water rights law. I know how that sounds." }
+    ],
+    tags: ["Law", "Climbing", "Nature", "Policy"],
+    likedYou: false
+  },
+  {
+    id: 5,
+    name: "Zoe",
+    age: 29,
+    city: "Brooklyn",
+    photos: [
+      "https://picsum.photos/seed/zoeb1/400/500",
+      "https://picsum.photos/seed/zoeb2/400/500",
+    ],
+    bio: "Documentary filmmaker. I find ordinary lives extraordinary. I will absolutely ask you odd questions on a first date.",
+    prompts: [
+      { q: "My ideal Sunday", a: "Film at noon, long walk, dinner somewhere too loud." },
+      { q: "People describe me as", a: "Curious to a fault. I take it as a compliment." },
+      { q: "I'll know it's right when", a: "Silence with you feels easy." }
+    ],
+    tags: ["Film", "Storytelling", "Photography", "Coffee"],
+    likedYou: true
+  },
+  {
+    id: 6,
+    name: "Nadia",
+    age: 25,
+    city: "Los Angeles",
+    photos: [
+      "https://picsum.photos/seed/nadia1/400/500",
+      "https://picsum.photos/seed/nadia2/400/500",
+    ],
+    bio: "Architect with a weakness for brutalist buildings and very good pastries. Mornings are sacred to me.",
+    prompts: [
+      { q: "One thing I'd change about myself", a: "I care too much about font choices." },
+      { q: "I'm happiest when", a: "I'm drawing something with nowhere to be." }
+    ],
+    tags: ["Architecture", "Design", "Baking", "Cycling"],
+    likedYou: false
+  },
+  {
+    id: 7,
+    name: "Claire",
+    age: 31,
+    city: "Boston",
+    photos: [
+      "https://picsum.photos/seed/claire1/400/500",
+      "https://picsum.photos/seed/claire2/400/500",
+    ],
+    bio: "Pediatric nurse, marathon runner, recovering perfectionist. I will out-walk anyone on a city trip.",
+    prompts: [
+      { q: "A dealbreaker for me is", a: "Unkindness — the small quiet kind especially." },
+      { q: "I'm still learning to", a: "Let a good thing be good without overanalyzing it." }
+    ],
+    tags: ["Medicine", "Running", "Cooking", "Podcasts"],
+    likedYou: false
+  },
+  {
+    id: 8,
+    name: "Ines",
+    age: 28,
+    city: "Seattle",
+    photos: [
+      "https://picsum.photos/seed/ines1/400/500",
+      "https://picsum.photos/seed/ines2/400/500",
+    ],
+    bio: "Translator (French, Portuguese, Spanish). I collect idioms that don't survive translation. It says everything.",
+    prompts: [
+      { q: "My love language is", a: "Sending you the exact article you needed." },
+      { q: "You should know that", a: "I will always order the most interesting thing on the menu." },
+      { q: "I feel most myself", a: "Somewhere I've never been before." }
+    ],
+    tags: ["Languages", "Literature", "Travel", "Food"],
+    likedYou: true
+  }
+];
+
+const FRIEND_NAMES = ["Jamie", "Alex", "Morgan", "Taylor", "Jordan"];
+const FRIEND_SEEDS = ["frnd1", "frnd2", "frnd3", "frnd4", "frnd5"];
+
+function makeFriends() {
+  return FRIEND_NAMES.map((name, i) => ({
+    id: i + 1,
+    name,
+    avatar: `https://picsum.photos/seed/${FRIEND_SEEDS[i]}/60/60`,
+    vote: 'pending'
+  }));
+}
+
+// ══════════════════════════════════════════════
+// APP STATE
+// ══════════════════════════════════════════════
+
+const State = {
+  screen: 'discovery',       // 'discovery' | 'match' | 'approval' | 'matches'
+  profileIndex: 0,
+  photoIndex: {},            // profileId -> current photo index
+  matches: [],               // array of match objects
+  activeMatchId: null,
+  newMatchId: null           // for match reveal screen
+};
+
+function currentProfile() {
+  return PROFILES[State.profileIndex] || null;
+}
+
+function getMatch(id) {
+  return State.matches.find(m => m.matchId === id);
+}
+
+function isUnlocked(match) {
+  const approved = match.friends.filter(f => f.vote === 'approved').length;
+  const total    = match.friends.filter(f => f.vote !== 'pending').length;
+  if (approved < 3) return false;
+  if (total < 5)    return true;
+  return approved > total / 2;
+}
+
+function getPhotoIndex(profileId) {
+  return State.photoIndex[profileId] || 0;
+}
+
+// ══════════════════════════════════════════════
+// ACTIONS
+// ══════════════════════════════════════════════
+
+function likeProfile() {
+  const p = currentProfile();
+  if (!p) return;
+  if (p.likedYou) {
+    const matchId = 'match_' + p.id;
+    State.matches.push({
+      matchId,
+      profile: p,
+      friends: makeFriends()
+    });
+    State.newMatchId = matchId;
+    State.screen = 'match';
+  } else {
+    State.profileIndex++;
+  }
+  render();
+}
+
+function passProfile() {
+  State.profileIndex++;
+  render();
+}
+
+function goToScreen(s) {
+  State.screen = s;
+  render();
+}
+
+function goToApproval(matchId) {
+  State.activeMatchId = matchId;
+  State.screen = 'approval';
+  render();
+}
+
+function keepSwiping() {
+  State.profileIndex++;
+  State.screen = 'discovery';
+  render();
+}
+
+function simulateVote(matchId) {
+  const match = getMatch(matchId);
+  if (!match) return;
+  const pending = match.friends.filter(f => f.vote === 'pending');
+  if (!pending.length) return;
+  const friend = pending[Math.floor(Math.random() * pending.length)];
+  friend.vote = Math.random() < 0.70 ? 'approved' : 'rejected';
+  render();
+}
+
+function nextPhoto(profileId) {
+  const profile = PROFILES.find(p => p.id === profileId);
+  if (!profile) return;
+  const cur = getPhotoIndex(profileId);
+  State.photoIndex[profileId] = (cur + 1) % profile.photos.length;
+  render();
+}
+
+function prevPhoto(profileId) {
+  const profile = PROFILES.find(p => p.id === profileId);
+  if (!profile) return;
+  const cur = getPhotoIndex(profileId);
+  State.photoIndex[profileId] = (cur - 1 + profile.photos.length) % profile.photos.length;
+  render();
+}
+
+// ══════════════════════════════════════════════
+// RENDER
+// ══════════════════════════════════════════════
+
+function render() {
+  const app = document.getElementById('app');
+  let headerHTML = '';
+  let screenHTML = '';
+  let navHTML    = renderNav();
+
+  switch (State.screen) {
+    case 'discovery': {
+      headerHTML = `<div class="app-header"><span class="wordmark">Arranged</span></div>`;
+      screenHTML = `<div class="screen discovery-screen screen-enter">${renderDiscovery()}</div>`;
+      break;
+    }
+    case 'match': {
+      headerHTML = `<div class="app-header"><span class="wordmark">Arranged</span></div>`;
+      screenHTML = `<div class="screen">${renderMatchScreen()}</div>`;
+      navHTML = '';
+      break;
+    }
+    case 'approval': {
+      const m = getMatch(State.activeMatchId);
+      const name = m ? m.profile.name : '';
+      headerHTML = `<div class="app-header">
+        <button class="back-btn" data-action="back">&#8592;</button>
+        <h2>${name}</h2>
+      </div>`;
+      screenHTML = `<div class="screen screen-enter">${renderApproval()}</div>`;
+      break;
+    }
+    case 'matches': {
+      headerHTML = `<div class="app-header"><span class="wordmark">Arranged</span></div>`;
+      screenHTML = `<div class="screen screen-enter">${renderMatchesList()}</div>`;
+      break;
+    }
+  }
+
+  app.innerHTML = headerHTML + screenHTML + navHTML;
+}
+
+function renderNav() {
+  const dActive = State.screen === 'discovery' || State.screen === 'match' ? 'active' : '';
+  const mActive = State.screen === 'matches' || State.screen === 'approval' ? 'active' : '';
+  return `
+    <nav class="bottom-nav">
+      <button class="nav-tab ${dActive}" data-action="go-discovery">
+        <span class="nav-icon">✦</span>
+        Discover
+      </button>
+      <button class="nav-tab ${mActive}" data-action="go-matches">
+        <span class="nav-icon">♡</span>
+        Matches
+        ${State.matches.length > 0 ? `<span style="position:absolute;top:8px;right:calc(50% - 28px);background:var(--teal-mid);color:white;border-radius:50%;width:16px;height:16px;font-size:10px;display:flex;align-items:center;justify-content:center;font-weight:700;">${State.matches.length}</span>` : ''}
+      </button>
+    </nav>`;
+}
+
+function renderDiscovery() {
+  const p = currentProfile();
+  if (!p) {
+    return `
+      <div class="empty-state">
+        <div class="empty-icon">✦</div>
+        <h2>You've seen everyone</h2>
+        <p>New profiles arrive soon.<br>Check your matches in the meantime.</p>
+      </div>
+      <div class="action-buttons">
+        <button class="btn-pass" disabled style="opacity:0.3">✕</button>
+        <button class="btn-like" disabled style="opacity:0.3">♥</button>
+      </div>`;
+  }
+
+  const photoIdx = getPhotoIndex(p.id);
+  const dots = p.photos.map((_, i) =>
+    `<div class="photo-dot ${i === photoIdx ? 'active' : ''}"></div>`
+  ).join('');
+
+  const prompts = p.prompts.map(pr => `
+    <div class="prompt-card">
+      <p class="prompt-q">${pr.q}</p>
+      <p class="prompt-a">"${pr.a}"</p>
+    </div>`).join('');
+
+  const tags = p.tags.map(t => `<span class="tag">${t}</span>`).join('');
+
+  return `
+    <div class="profile-card">
+      <div class="photo-area">
+        <img src="${p.photos[photoIdx]}" alt="${p.name}" onerror="this.src='https://picsum.photos/seed/fallback${p.id}/400/500'">
+        <div class="photo-overlay">
+          <div class="photo-tap-left" data-action="prev-photo" data-id="${p.id}"></div>
+          <div class="photo-tap-right" data-action="next-photo" data-id="${p.id}"></div>
+        </div>
+        <div class="photo-dots">${dots}</div>
+        <div class="profile-name-overlay">
+          <h1>${p.name}, ${p.age}</h1>
+          <p class="profile-city">📍 ${p.city}</p>
+        </div>
+      </div>
+      <div class="profile-body">
+        <p class="profile-bio">"${p.bio}"</p>
+        ${prompts}
+        <div class="profile-tags">${tags}</div>
+      </div>
+    </div>
+    <div class="action-buttons">
+      <button class="btn-pass" data-action="pass">✕</button>
+      <button class="btn-like" data-action="like">♥</button>
+    </div>`;
+}
+
+function renderMatchScreen() {
+  const match = getMatch(State.newMatchId);
+  if (!match) return '';
+  const p = match.profile;
+
+  return `
+    <div class="match-screen">
+      <div class="match-burst">
+        <img class="match-photo" src="${p.photos[0]}" alt="${p.name}">
+      </div>
+      <p class="match-label">✦ &nbsp; It's a Match &nbsp; ✦</p>
+      <h1 class="match-headline">You & ${p.name}</h1>
+      <p class="match-subline">You both liked each other.<br>Now let <strong>your friends</strong> weigh in.</p>
+      <div class="friend-teaser">
+        <div class="teaser-icon">👥</div>
+        <h3>Friend Approval Required</h3>
+        <p>Before you can chat, at least <strong>3 friends</strong> need to give their blessing. If 5 friends vote, a majority must approve.</p>
+      </div>
+      <button class="btn-primary" data-action="see-votes" data-id="${match.matchId}">See Friend Votes</button>
+      <button class="btn-secondary" data-action="keep-swiping">Keep Swiping</button>
+    </div>`;
+}
+
+function renderApproval() {
+  const match = getMatch(State.activeMatchId);
+  if (!match) return '';
+  const p = match.profile;
+  const approved = match.friends.filter(f => f.vote === 'approved').length;
+  const rejected = match.friends.filter(f => f.vote === 'rejected').length;
+  const pending  = match.friends.filter(f => f.vote === 'pending').length;
+  const total    = approved + rejected;
+  const unlocked = isUnlocked(match);
+  const noPending = pending === 0;
+
+  const pct = Math.min(100, Math.round((approved / 3) * 100));
+  const progressLabel = unlocked
+    ? 'Approved! ✓'
+    : `${approved} of 3 approvals needed`;
+
+  const friendItems = match.friends.map(f => `
+    <li class="friend-item">
+      <img class="friend-avatar" src="${f.avatar}" alt="${f.name}">
+      <span class="friend-name">${f.name}</span>
+      <span class="vote-badge ${f.vote}">${f.vote === 'pending' ? '⏳ Pending' : f.vote === 'approved' ? '✓ Approved' : '✕ Passed'}</span>
+    </li>`).join('');
+
+  const unlockedBanner = unlocked ? `
+    <div class="unlocked-banner">
+      <div class="banner-icon">🎉</div>
+      <h3>Your friends approved!</h3>
+      <p>You can now start a conversation with ${p.name}.</p>
+      <button class="btn-chat" data-action="chat-soon">Start Chatting ♥</button>
+    </div>` : '';
+
+  return `
+    <div class="approval-screen">
+      <div class="approval-summary">
+        <img src="${p.photos[0]}" alt="${p.name}">
+        <div class="approval-summary-info">
+          <div class="approval-summary-name">${p.name}, ${p.age}</div>
+          <div class="vote-stats">
+            <span class="vote-stat approved">✓ ${approved} approved</span>
+            <span class="vote-stat rejected">✕ ${rejected} passed</span>
+            <span class="vote-stat pending">⏳ ${pending}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="progress-section">
+        <div class="progress-label">
+          <span>${progressLabel}</span>
+          <span style="color:var(--teal-mid);font-weight:600">${approved}/3</span>
+        </div>
+        <div class="progress-track">
+          <div class="progress-fill" style="width:${pct}%"></div>
+        </div>
+      </div>
+
+      ${unlockedBanner}
+
+      <ul class="friends-list">${friendItems}</ul>
+
+      ${!noPending ? `
+        <button class="simulate-btn" data-action="simulate-vote" data-id="${match.matchId}">
+          ✦ Simulate a friend vote
+        </button>
+        <p class="simulate-hint">Demo: tap to simulate a friend casting their vote</p>
+      ` : `<p class="simulate-hint" style="text-align:center;margin-bottom:20px">All friends have voted.</p>`}
+    </div>`;
+}
+
+function renderMatchesList() {
+  const locked   = State.matches.filter(m => !isUnlocked(m));
+  const unlocked = State.matches.filter(m =>  isUnlocked(m));
+
+  if (State.matches.length === 0) {
+    return `
+      <div class="matches-screen">
+        <p class="matches-screen-title">Matches</p>
+        <div class="empty-state" style="padding-top:40px">
+          <div class="empty-icon">♡</div>
+          <h2>No matches yet</h2>
+          <p>Keep swiping — your people are out there.</p>
+        </div>
+      </div>`;
+  }
+
+  const lockedItems = locked.map(m => {
+    const approved = m.friends.filter(f => f.vote === 'approved').length;
+    return `
+      <div class="match-list-item" data-action="open-approval" data-id="${m.matchId}">
+        <img class="match-list-img" src="${m.profile.photos[0]}" alt="${m.profile.name}">
+        <div class="match-list-info">
+          <div class="match-list-name">${m.profile.name}, ${m.profile.age}</div>
+          <div class="match-list-status">Awaiting friends · ${approved}/3 approvals</div>
+        </div>
+        <div class="match-list-action"><span class="lock-icon">🔒</span></div>
+      </div>`;
+  }).join('');
+
+  const unlockedItems = unlocked.map(m => `
+    <div class="match-list-item" data-action="chat-soon">
+      <img class="match-list-img" src="${m.profile.photos[0]}" alt="${m.profile.name}">
+      <div class="match-list-info">
+        <div class="match-list-name">${m.profile.name}, ${m.profile.age}</div>
+        <div class="match-list-status unlocked-status">✓ Friends approved</div>
+      </div>
+      <div class="match-list-action">
+        <button class="btn-chat-small" data-action="chat-soon">Chat</button>
+      </div>
+    </div>`).join('');
+
+  return `
+    <div class="matches-screen">
+      <p class="matches-screen-title">Matches</p>
+      <p class="matches-screen-sub">${State.matches.length} ${State.matches.length === 1 ? 'match' : 'matches'} so far</p>
+      ${unlocked.length > 0 ? `<p class="section-label">Ready to chat</p>${unlockedItems}` : ''}
+      ${locked.length   > 0 ? `<p class="section-label">Awaiting approval</p>${lockedItems}` : ''}
+    </div>`;
+}
+
+// ══════════════════════════════════════════════
+// EVENT DELEGATION
+// ══════════════════════════════════════════════
+
+document.addEventListener('click', e => {
+  const el     = e.target.closest('[data-action]');
+  if (!el) return;
+  const action = el.dataset.action;
+  const id     = el.dataset.id;
+
+  switch (action) {
+    case 'like':          likeProfile();          break;
+    case 'pass':          passProfile();           break;
+    case 'next-photo':    nextPhoto(parseInt(id)); break;
+    case 'prev-photo':    prevPhoto(parseInt(id)); break;
+    case 'see-votes':     goToApproval(id);        break;
+    case 'keep-swiping':  keepSwiping();           break;
+    case 'back':          history.back(); goToScreen('matches'); break;
+    case 'go-discovery':  goToScreen('discovery'); break;
+    case 'go-matches':    goToScreen('matches');   break;
+    case 'open-approval': goToApproval(id);        break;
+    case 'simulate-vote': simulateVote(id);        break;
+    case 'chat-soon':
+      alert('💬 Chat is coming soon!\n\nThis feature will be available once the full app is built.');
+      break;
+  }
+});
+
+// ══════════════════════════════════════════════
+// BOOT
+// ══════════════════════════════════════════════
+render();
+</script>
+</body>
+</html>
