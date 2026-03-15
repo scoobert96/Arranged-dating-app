@@ -1124,7 +1124,7 @@
        BEST FRIEND MODAL
     ════════════════════════════ */
     .modal-overlay {
-      position: fixed;
+      position: absolute;
       inset: 0;
       background: rgba(42,31,20,0.52);
       z-index: 200;
@@ -1497,6 +1497,119 @@
       cursor: pointer;
       flex-shrink: 0;
     }
+
+    /* ════════════════════════════
+       VOTING WINDOW BAR
+    ════════════════════════════ */
+    .vote-window-bar {
+      padding: 7px 14px 10px;
+      background: var(--beige-pale);
+      border-top: 1px solid var(--beige-mid);
+    }
+    .vwb-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 5px;
+    }
+    .vwb-label { font-size: 11px; color: var(--ink-muted); font-weight: 500; }
+    .vwb-track {
+      height: 4px;
+      background: var(--beige-mid);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .vwb-fill {
+      height: 100%;
+      border-radius: 2px;
+      background: var(--teal-mid);
+    }
+    .vwb-fill.closed { background: var(--beige-dark); }
+    .btn-skip-window {
+      font-size: 10px;
+      background: none;
+      border: none;
+      color: var(--ink-muted);
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      padding: 0;
+      text-decoration: underline;
+    }
+
+    /* ════════════════════════════
+       ADVISING VOTE PANEL
+    ════════════════════════════ */
+    .vote-panel {
+      background: white;
+      border-radius: var(--radius);
+      padding: 14px 16px;
+      margin-top: 14px;
+      box-shadow: var(--shadow-sm);
+    }
+    .vote-panel-header {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--ink-muted);
+      margin-bottom: 12px;
+    }
+    .vote-panel-row {
+      display: flex;
+      gap: 10px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--beige-mid);
+    }
+    .vote-panel-row:last-child { border-bottom: none; }
+    .vote-panel-avatar {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+    .vote-panel-info { flex: 1; min-width: 0; }
+    .vote-panel-name { font-size: 14px; font-weight: 600; color: var(--ink); margin-bottom: 2px; }
+    .vote-panel-comment {
+      font-size: 12px;
+      color: var(--ink-soft);
+      font-style: italic;
+      margin: 4px 0;
+      line-height: 1.45;
+    }
+    .vote-panel-reply {
+      font-size: 11px;
+      color: var(--teal);
+      font-style: normal;
+      margin-top: 3px;
+      padding-left: 8px;
+      border-left: 2px solid var(--teal-light);
+    }
+    .reply-input-row {
+      display: flex;
+      gap: 6px;
+      margin-top: 5px;
+    }
+    .reply-input {
+      flex: 1;
+      border: 1px solid var(--beige-mid);
+      border-radius: 14px;
+      padding: 5px 10px;
+      font-size: 12px;
+      font-family: 'Inter', sans-serif;
+      background: var(--beige-pale);
+      outline: none;
+      color: var(--ink);
+    }
+    .reply-btn {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      background: var(--teal);
+      color: white;
+      border: none;
+      font-size: 13px;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
   </style>
 </head>
 <body>
@@ -1692,7 +1805,13 @@ const DATING_FRIENDS = [
             { q: 'I will always', a: 'Order the thing on the menu I have never heard of.' }
           ],
           tags: ['Architecture', 'Cooking', 'Jazz', 'Travel']
-        }
+        },
+        hoursElapsed: 9,
+        mockAdvisors: [
+          { id: 'jma1', name: 'Riley', avatar: 'https://randomuser.me/api/portraits/women/44.jpg', vote: 'approved', comment: 'His cooking thing is adorable and architecture is a great career.' },
+          { id: 'jma2', name: 'Casey', avatar: 'https://randomuser.me/api/portraits/men/33.jpg',  vote: 'approved', comment: 'Architecture + jazz? Jenny would love this guy.' },
+          { id: 'jma3', name: 'Drew',  avatar: 'https://randomuser.me/api/portraits/women/57.jpg', vote: 'pending',  comment: null },
+        ]
       },
       {
         matchId: 'jm2',
@@ -1708,7 +1827,13 @@ const DATING_FRIENDS = [
             { q: 'I value most', a: 'Depth — in people, in coffee, in everything.' },
           ],
           tags: ['Writing', 'Coffee', 'Books', 'Film']
-        }
+        },
+        hoursElapsed: 11,
+        mockAdvisors: [
+          { id: 'jmb1', name: 'Riley', avatar: 'https://randomuser.me/api/portraits/women/44.jpg', vote: 'rejected', comment: 'The "short commutes" thing is giving me very specific vibes lol' },
+          { id: 'jmb2', name: 'Casey', avatar: 'https://randomuser.me/api/portraits/men/33.jpg',  vote: 'approved', comment: null },
+          { id: 'jmb3', name: 'Drew',  avatar: 'https://randomuser.me/api/portraits/women/57.jpg', vote: 'approved', comment: 'Writers are underrated. I say yes.' },
+        ]
       }
     ]
   },
@@ -1733,7 +1858,13 @@ const DATING_FRIENDS = [
             { q: 'My perfect weekend', a: 'Farmers market, long run, paint-covered hands.' }
           ],
           tags: ['Data', 'Painting', 'Running', 'Yoga']
-        }
+        },
+        hoursElapsed: 13,
+        mockAdvisors: [
+          { id: 'cma1', name: 'Alex',   avatar: 'https://randomuser.me/api/portraits/men/28.jpg',    vote: 'approved', comment: 'Data scientist who paints on weekends — great combo.' },
+          { id: 'cma2', name: 'Sam',    avatar: 'https://randomuser.me/api/portraits/women/50.jpg',  vote: 'approved', comment: 'Chris always wanted someone creative. This is exactly it.' },
+          { id: 'cma3', name: 'Jordan', avatar: 'https://randomuser.me/api/portraits/men/62.jpg',    vote: 'approved', comment: null },
+        ]
       },
       {
         matchId: 'cm2',
@@ -1748,7 +1879,13 @@ const DATING_FRIENDS = [
             { q: 'A conversation starter', a: 'What is something you changed your mind about recently?' }
           ],
           tags: ['Science', 'Gardening', 'Cooking', 'Reading']
-        }
+        },
+        hoursElapsed: 3,
+        mockAdvisors: [
+          { id: 'cmb1', name: 'Alex',   avatar: 'https://randomuser.me/api/portraits/men/28.jpg',   vote: 'pending',  comment: null },
+          { id: 'cmb2', name: 'Sam',    avatar: 'https://randomuser.me/api/portraits/women/50.jpg', vote: 'approved', comment: 'Molecular biology + gardening is unexpectedly endearing.' },
+          { id: 'cmb3', name: 'Jordan', avatar: 'https://randomuser.me/api/portraits/men/62.jpg',   vote: 'pending',  comment: null },
+        ]
       }
     ]
   },
@@ -1773,7 +1910,13 @@ const DATING_FRIENDS = [
             { q: 'You would like me because', a: 'I remember the things people mention once in passing.' }
           ],
           tags: ['Music', 'Cycling', 'Production', 'Food']
-        }
+        },
+        hoursElapsed: 6,
+        mockAdvisors: [
+          { id: 'sma1', name: 'Taylor', avatar: 'https://randomuser.me/api/portraits/women/36.jpg', vote: 'approved', comment: 'Music + cycling is very Sam energy. I vote yes.' },
+          { id: 'sma2', name: 'Morgan', avatar: 'https://randomuser.me/api/portraits/men/41.jpg',   vote: 'approved', comment: '"Show up fully or not at all" — that quote got me honestly.' },
+          { id: 'sma3', name: 'Quinn',  avatar: 'https://randomuser.me/api/portraits/women/62.jpg', vote: 'pending',  comment: null },
+        ]
       }
     ]
   }
@@ -1846,10 +1989,9 @@ const State = {
   advisingVotes: {},             // { matchId: 'approved' | 'rejected' }
   advisingPhotoIndex: {},        // { matchId: photoIndex }
   advisingComments: {},          // { matchId: comment string }
+  advisingReplies: {},           // { `${matchId}_${advisorId}`: replyText }
   showAdvisingCommentModal: false,
   advisingCommentPending: null,  // {matchId, vote} while modal open
-  showChatStartModal: false,
-  pendingChatMatchId: null,
 };
 
 // ══════════════════════════════════════════════
@@ -1858,17 +2000,26 @@ const State = {
 
 function currentProfile() { return PROFILES[State.profileIndex] || null; }
 function getMatch(id) { return State.matches.find(m => m.matchId === id); }
+
+function getHoursRemaining(match) { return Math.max(0, 12 - (match.hoursElapsed || 0)); }
+function isVotingOpen(match)      { return getHoursRemaining(match) > 0; }
+function isChatAvailable(match)   { return !isVotingOpen(match) && isUnlocked(match); }
+function formatTimeRemaining(h) {
+  if (h <= 0)  return 'Closed';
+  if (h < 1)   return `${Math.round(h * 60)}m remaining`;
+  return `${Math.floor(h)}h remaining`;
+}
 function isUnlocked(match) {
-  const approved = match.friends.filter(f => f.vote === 'approved').length;
-  const total    = match.friends.filter(f => f.vote !== 'pending').length;
-  // Best friend override
-  if (State.bestFriendId) {
-    const bf = match.friends.find(f => f.id === State.bestFriendId);
-    if (bf && bf.vote === 'approved') return true;
-  }
-  if (approved < 3) return false;
-  if (total < 5) return true;
-  return approved > total / 2;
+  let approved = 0, total = 0;
+  match.friends.forEach(f => {
+    const w = (State.bestFriendId === f.id) ? 2 : 1;
+    if (f.vote !== 'pending') {
+      total    += w;
+      if (f.vote === 'approved') approved += w;
+    }
+  });
+  // Need at least 3 weighted approvals AND strict majority of votes cast
+  return total >= 3 && approved * 2 > total;
 }
 function getPhotoIndex(profileId) { return State.photoIndex[profileId] || 0; }
 function getAdvisingFriend() { return DATING_FRIENDS.find(f => f.id === State.advisingFriendId) || null; }
@@ -1930,7 +2081,7 @@ function likeProfile() {
     if (p.likedYou) {
       const matchId = 'match_' + p.id;
       const friends = makeFriends();
-      State.matches.push({ matchId, profile: p, friends });
+      State.matches.push({ matchId, profile: p, friends, hoursElapsed: 0 });
       State.newMatchId = matchId;
       State.screen = 'match';
       // Auto-kick off 2 votes so the match list has immediate activity
@@ -2059,22 +2210,13 @@ function cancelBestFriendConfirm() {
   State.confirmingBestFriendId = null;
   render();
 }
-function openChatStartModal(matchId) {
-  State.pendingChatMatchId = matchId;
-  State.showChatStartModal = true;
-  render();
-}
-function confirmChatStart() {
-  const matchId = State.pendingChatMatchId;
-  State.showChatStartModal = false;
-  State.pendingChatMatchId = null;
+function skipVotingWindow(matchId) {
   const match = getMatch(matchId);
-  if (match) match.chatStarted = true;
-  openChat(matchId);
+  if (match) { match.hoursElapsed = 13; render(); }
 }
-function cancelChatStart() {
-  State.showChatStartModal = false;
-  State.pendingChatMatchId = null;
+function addAdvisingReply(matchId, advisorId, text) {
+  if (!text.trim()) return;
+  State.advisingReplies[matchId + '_' + advisorId] = text.trim();
   render();
 }
 function submitAdvisingComment(comment) {
@@ -2278,11 +2420,11 @@ function render() {
         <div class="modal-sheet">
           <div class="modal-icon">🤝</div>
           <div class="modal-title">Make ${fname} your BFF?</div>
-          <div class="modal-body">Your Best Friend can single-handedly approve a match without requiring the usual majority vote from your friend group.${currentBFName} They must leave a comment whenever they vote.</div>
-          <div class="modal-warning">If your BFF disapproves, the match can still be approved the normal way — majority vote still applies. Would you like to continue?</div>
+          <div class="modal-body">Your Best Friend's vote counts as 2 votes instead of 1 — both for approvals and rejections.${currentBFName} They must leave a comment whenever they vote.</div>
+          <div class="modal-warning">Their vote still needs the group majority to unlock a match, but it carries double the weight. Would you like to continue?</div>
           <div class="modal-actions">
-            <button class="modal-btn-yes" data-action="confirm-bf" data-id="${State.confirmingBestFriendId}">Yes, send BFF request to ${fname}</button>
-            <button class="modal-btn-back" data-action="cancel-bf-confirm">Go back</button>
+            <button class="modal-btn-yes" onclick="confirmBestFriend(${State.confirmingBestFriendId})">Yes, send BFF request to ${fname}</button>
+            <button class="modal-btn-back" onclick="cancelBestFriendConfirm()">Go back</button>
           </div>
         </div>
       </div>`;
@@ -2298,24 +2440,8 @@ function render() {
           <div class="modal-body">You are currently in <strong>${currentMode}</strong> mode. Would you like to switch to <strong>${targetMode}</strong> mode?</div>
           <div class="modal-warning">Your progress in ${currentMode} mode will be saved.</div>
           <div class="modal-actions">
-            <button class="modal-btn-yes" data-action="confirm-mode-switch">Yes, switch to ${targetMode} mode</button>
-            <button class="modal-btn-back" data-action="cancel-mode-switch">Go back</button>
-          </div>
-        </div>
-      </div>`;
-  } else if (State.showChatStartModal) {
-    const cm = getMatch(State.pendingChatMatchId);
-    const cname = cm ? cm.profile.name : '';
-    modalHTML = `
-      <div class="modal-overlay">
-        <div class="modal-sheet">
-          <div class="modal-icon">💬</div>
-          <div class="modal-title">Start chatting with ${cname}?</div>
-          <div class="modal-body">Once you start chatting, voting is closed — no additional friends can participate in the approval process.</div>
-          <div class="modal-warning">Make sure you're happy with the votes before opening the chat.</div>
-          <div class="modal-actions">
-            <button class="modal-btn-yes" data-action="confirm-chat-start">Yes, start chatting</button>
-            <button class="modal-btn-back" data-action="cancel-chat-start">Go back</button>
+            <button class="modal-btn-yes" onclick="confirmModeSwitch()">Yes, switch to ${targetMode} mode</button>
+            <button class="modal-btn-back" onclick="cancelModeSwitch()">Go back</button>
           </div>
         </div>
       </div>`;
@@ -2329,8 +2455,8 @@ function render() {
           <div class="modal-body">Do you want to share this chat with ${bfName}? Your match will not be aware, but ${bfName} will be able to follow along with messages as they come in.</div>
           <div class="modal-warning">You can revoke access at any time from your settings.</div>
           <div class="modal-actions">
-            <button class="modal-btn-yes" data-action="confirm-chat-share">Yes, let ${bfName} follow along</button>
-            <button class="modal-btn-back" data-action="cancel-chat-share">Go back</button>
+            <button class="modal-btn-yes" onclick="confirmChatShare()">Yes, let ${bfName} follow along</button>
+            <button class="modal-btn-back" onclick="cancelChatShare()">Go back</button>
           </div>
         </div>
       </div>`;
@@ -2349,8 +2475,8 @@ function render() {
           <div class="modal-body">You ${voteWord} on ${pname}. Want to add a short comment to explain your vote to ${fname}?</div>
           <textarea id="advising-comment-input" style="width:100%;border:1.5px solid var(--beige-mid);border-radius:12px;padding:12px;font-size:14px;font-family:Inter,sans-serif;background:var(--beige-pale);outline:none;color:var(--ink);resize:none;margin:12px 0 16px;display:block;box-sizing:border-box" rows="3" placeholder="e.g. Their profile seemed really genuine…"></textarea>
           <div class="modal-actions">
-            <button class="modal-btn-yes" data-action="submit-advising-comment">Add Note</button>
-            <button class="modal-btn-back" data-action="skip-advising-comment">Skip</button>
+            <button class="modal-btn-yes" onclick="submitAdvisingComment(document.getElementById('advising-comment-input').value.trim())">Add Note</button>
+            <button class="modal-btn-back" onclick="skipAdvisingComment()">Skip</button>
           </div>
         </div>
       </div>`;
@@ -2514,11 +2640,15 @@ function renderApproval() {
   const pending  = match.friends.filter(f => f.vote === 'pending').length;
   const unlocked = isUnlocked(match);
   const noPending = pending === 0;
-  const pct = Math.min(100, Math.round((approved / 3) * 100));
-  const progressLabel = unlocked ? 'Approved! ✓' : `${approved} of 3 approvals needed`;
+  const pct = Math.min(100, Math.round((wApproved / 3) * 100));
+  const progressLabel = unlocked ? 'Approved! ✓' : `${wApproved} of 3 weighted approvals needed`;
 
   const bf = State.bestFriendId ? match.friends.find(f => f.id === State.bestFriendId) : null;
-  const bfApproved = bf && bf.vote === 'approved';
+  let wApproved = 0, wTotal = 0;
+  match.friends.forEach(f => {
+    const w = State.bestFriendId === f.id ? 2 : 1;
+    if (f.vote !== 'pending') { wTotal += w; if (f.vote === 'approved') wApproved += w; }
+  });
 
   const stackAvatars = match.friends.map(f => {
     const ring = f.vote === 'approved' ? 'border-color:#2ab5b5'
@@ -2570,22 +2700,22 @@ function renderApproval() {
       </div>`;
   }).join('');
 
+  const chatAvail = isChatAvailable(match);
   let unlockedBanner = '';
-  if (unlocked && bfApproved) {
-    unlockedBanner = `
-      <div class="best-friend-unlock">
-        <div style="font-size:28px;margin-bottom:8px">⭐</div>
-        <h3>Best Advisor Override!</h3>
-        <p>${bf.name} gave the green light — that's all you need.</p>
-        <button class="btn-chat" data-action="open-chat" data-id="${match.matchId}" style="background:rgba(255,255,255,0.2);color:white;margin-top:2px">Start Chatting ♥</button>
-      </div>`;
-  } else if (unlocked) {
+  if (chatAvail) {
     unlockedBanner = `
       <div class="unlocked-banner">
         <div class="banner-icon">🎉</div>
         <h3>Your friends approved!</h3>
         <p>You can now start a conversation with ${p.name}.</p>
         <button class="btn-chat" data-action="open-chat" data-id="${match.matchId}">Start Chatting ♥</button>
+      </div>`;
+  } else if (unlocked && isVotingOpen(match)) {
+    unlockedBanner = `
+      <div style="background:var(--teal-pale);border:1px solid var(--teal-light);border-radius:var(--radius);padding:16px;text-align:center;margin-bottom:16px">
+        <div style="font-size:20px;margin-bottom:6px">⏳</div>
+        <p style="font-size:14px;color:var(--teal);font-weight:600">Enough votes to approve!</p>
+        <p style="font-size:12px;color:var(--ink-muted);margin-top:4px">Chat unlocks after the ${formatTimeRemaining(getHoursRemaining(match))} voting window closes.</p>
       </div>`;
   }
 
@@ -2608,7 +2738,7 @@ function renderApproval() {
       <div class="progress-section">
         <div class="progress-label">
           <span>${progressLabel}</span>
-          <span style="color:var(--teal-mid);font-weight:600">${approved}/3</span>
+          <span style="color:var(--teal-mid);font-weight:600">${wApproved}/3</span>
         </div>
         <div class="progress-track">
           <div class="progress-fill" style="width:${pct}%"></div>
@@ -2635,8 +2765,8 @@ function renderApproval() {
 
 /* ── Matches list ── */
 function renderMatchesList() {
-  const locked   = State.matches.filter(m => !isUnlocked(m));
-  const unlocked = State.matches.filter(m =>  isUnlocked(m));
+  const locked   = State.matches.filter(m => !isChatAvailable(m));
+  const unlocked = State.matches.filter(m =>  isChatAvailable(m));
 
   const titleRow = `
     <div class="matches-title-row">
@@ -2656,40 +2786,62 @@ function renderMatchesList() {
       </div>`;
   }
 
-  const lockedItems = locked.map(m => {
-    const approved = m.friends.filter(f => f.vote === 'approved').length;
-    const total    = m.friends.filter(f => f.vote !== 'pending').length;
-    const bfHTML   = getBFIndicatorHTML(m);
-    return `
-      <div class="match-list-item" data-action="open-approval" data-id="${m.matchId}">
-        <img class="match-list-img" src="${m.profile.photos[0]}" alt="${m.profile.name}">
-        <div class="match-list-info">
-          <div class="match-list-name">${m.profile.name}, ${m.profile.age}</div>
-          <div class="match-list-status">${approved}/${total || '?'} friends approved</div>
-          ${bfHTML ? `<div>${bfHTML}</div>` : ''}
-        </div>
-        <div class="match-list-action"><span class="lock-icon">🔒</span></div>
-      </div>`;
-  }).join('');
+  function matchCard(m) {
+    const hoursLeft   = getHoursRemaining(m);
+    const votingOpen  = isVotingOpen(m);
+    const chatReady   = isChatAvailable(m);
+    const pct         = Math.min(100, Math.round(((m.hoursElapsed || 0) / 12) * 100));
+    const bfHTML      = getBFIndicatorHTML(m);
+    let wApproved = 0, wTotal = 0;
+    m.friends.forEach(f => {
+      const w = State.bestFriendId === f.id ? 2 : 1;
+      if (f.vote !== 'pending') { wTotal += w; if (f.vote === 'approved') wApproved += w; }
+    });
 
-  const unlockedItems = unlocked.map(m => {
-    const approved = m.friends.filter(f => f.vote === 'approved').length;
-    const total    = m.friends.filter(f => f.vote !== 'pending').length;
-    const bfHTML   = getBFIndicatorHTML(m);
-    return `
-      <div class="match-list-item">
-        <img class="match-list-img" src="${m.profile.photos[0]}" alt="${m.profile.name}">
-        <div class="match-list-info">
-          <div class="match-list-name">${m.profile.name}, ${m.profile.age}</div>
-          <div class="match-list-status unlocked-status">✓ ${approved}/${total} friends approved</div>
-          ${bfHTML ? `<div>${bfHTML}</div>` : ''}
+    const windowBar = `
+      <div class="vote-window-bar">
+        <div class="vwb-row">
+          <span class="vwb-label">${votingOpen ? '⏳ ' + formatTimeRemaining(hoursLeft) : '✓ Voting window closed'}</span>
+          ${votingOpen ? `<button class="btn-skip-window" data-action="skip-voting-window" data-id="${m.matchId}">demo: skip ⏩</button>` : ''}
         </div>
-        <div class="match-list-action" style="display:flex;gap:6px;flex-direction:column;align-items:flex-end">
-          <button class="btn-chat-small" data-action="open-chat" data-id="${m.matchId}">💬 Chat</button>
-          <button class="btn-chat-small" style="background:var(--beige-mid);color:var(--ink-soft)" data-action="open-approval" data-id="${m.matchId}">📊 Votes</button>
-        </div>
+        <div class="vwb-track"><div class="vwb-fill ${!votingOpen ? 'closed' : ''}" style="width:${pct}%"></div></div>
       </div>`;
-  }).join('');
+
+    if (chatReady) {
+      return `
+        <div class="match-list-item" style="flex-direction:column;align-items:stretch;padding:0;overflow:hidden">
+          <div style="display:flex;align-items:center;gap:14px;padding:14px">
+            <img class="match-list-img" src="${m.profile.photos[0]}" alt="${m.profile.name}">
+            <div class="match-list-info">
+              <div class="match-list-name">${m.profile.name}, ${m.profile.age}</div>
+              <div class="match-list-status unlocked-status">✓ ${wApproved} approval weight</div>
+              ${bfHTML ? `<div>${bfHTML}</div>` : ''}
+            </div>
+            <div style="display:flex;gap:6px;flex-direction:column;align-items:flex-end;flex-shrink:0">
+              <button class="btn-chat-small" data-action="open-chat" data-id="${m.matchId}">💬 Chat</button>
+              <button class="btn-chat-small" style="background:var(--beige-mid);color:var(--ink-soft)" data-action="open-approval" data-id="${m.matchId}">📊 Votes</button>
+            </div>
+          </div>
+          ${windowBar}
+        </div>`;
+    }
+    return `
+      <div class="match-list-item" style="flex-direction:column;align-items:stretch;padding:0;overflow:hidden" data-action="open-approval" data-id="${m.matchId}">
+        <div style="display:flex;align-items:center;gap:14px;padding:14px">
+          <img class="match-list-img" src="${m.profile.photos[0]}" alt="${m.profile.name}">
+          <div class="match-list-info">
+            <div class="match-list-name">${m.profile.name}, ${m.profile.age}</div>
+            <div class="match-list-status">${wApproved}/${wTotal || '?'} approval weight</div>
+            ${bfHTML ? `<div>${bfHTML}</div>` : ''}
+          </div>
+          <div class="match-list-action"><span class="lock-icon">${votingOpen ? '⏳' : '🔒'}</span></div>
+        </div>
+        ${windowBar}
+      </div>`;
+  }
+
+  const lockedItems   = locked.map(matchCard).join('');
+  const unlockedItems = unlocked.map(matchCard).join('');
 
   return `
     <div class="matches-screen">
@@ -2820,19 +2972,31 @@ function renderAdvisingMatches() {
   if (!friend) return '';
 
   const items = friend.matches.map(m => {
-    const vote  = State.advisingVotes[m.matchId];
-    const voted = !!vote;
-    const chip  = voted
+    const vote      = State.advisingVotes[m.matchId];
+    const voted     = !!vote;
+    const hoursLeft = getHoursRemaining(m);
+    const open      = isVotingOpen(m);
+    const pct       = Math.min(100, Math.round(((m.hoursElapsed || 0) / 12) * 100));
+    const chip = voted
       ? `<span class="advising-vote-chip ${vote}">${vote === 'approved' ? '👍 Approved' : '👎 Passed'}</span>`
-      : `<div class="advising-new-dot"></div>`;
+      : open ? `<div class="advising-new-dot"></div>`
+      : `<span style="font-size:11px;color:var(--ink-muted)">🔒 Closed</span>`;
     return `
-      <div class="advising-match-card" data-action="open-advising-match" data-id="${m.matchId}">
-        <img class="advising-match-img" src="${m.profile.photos[0]}" alt="${m.profile.name}">
-        <div class="advising-match-info">
-          <div class="advising-match-name">${m.profile.name}, ${m.profile.age}</div>
-          <div class="advising-match-sub">📍 ${m.profile.city}</div>
+      <div class="advising-match-card" style="flex-direction:column;align-items:stretch;padding:0;overflow:hidden" data-action="open-advising-match" data-id="${m.matchId}">
+        <div style="display:flex;align-items:center;gap:14px;padding:14px">
+          <img class="advising-match-img" src="${m.profile.photos[0]}" alt="${m.profile.name}">
+          <div class="advising-match-info">
+            <div class="advising-match-name">${m.profile.name}, ${m.profile.age}</div>
+            <div class="advising-match-sub">📍 ${m.profile.city}</div>
+          </div>
+          ${chip}
         </div>
-        ${chip}
+        <div style="padding:0 14px 10px;background:var(--beige-pale)">
+          <div style="display:flex;justify-content:space-between;margin-bottom:4px">
+            <span style="font-size:11px;color:var(--ink-muted)">${open ? formatTimeRemaining(hoursLeft) + ' to vote' : 'Voting closed'}</span>
+          </div>
+          <div class="vwb-track"><div class="vwb-fill ${!open ? 'closed' : ''}" style="width:${pct}%"></div></div>
+        </div>
       </div>`;
   }).join('');
 
@@ -2848,25 +3012,94 @@ function renderAdvisingDetail() {
   const vote     = State.advisingVotes[matchObj.matchId];
   const voted    = !!vote;
   const photoIdx = getAdvisingPhotoIndex(matchObj.matchId);
+  const hoursLeft  = getHoursRemaining(matchObj);
+  const votingOpen = isVotingOpen(matchObj);
+  const pct        = Math.min(100, Math.round(((matchObj.hoursElapsed || 0) / 12) * 100));
 
   const dots = p.photos.map((_, i) =>
     `<div class="photo-dot ${i === photoIdx ? 'active' : ''}"></div>`
   ).join('');
-
   const prompts = p.prompts.map(pr => `
     <div class="prompt-card">
       <p class="prompt-q">${pr.q}</p>
       <p class="prompt-a">"${pr.a}"</p>
     </div>`).join('');
-
   const tags = p.tags.map(t => `<span class="tag">${t}</span>`).join('');
+
+  const countdownBar = `
+    <div class="vote-window-bar">
+      <div class="vwb-row">
+        <span class="vwb-label">${votingOpen ? '⏳ ' + formatTimeRemaining(hoursLeft) + ' to vote' : '🔒 Voting window closed'}</span>
+      </div>
+      <div class="vwb-track"><div class="vwb-fill ${!votingOpen ? 'closed' : ''}" style="width:${pct}%"></div></div>
+    </div>`;
 
   const voteArea = voted
     ? `<div class="voted-overlay-banner ${vote}">
         ${vote === 'approved' ? '👍 You approved this match' : '👎 You passed on this match'}
-        <br><span style="font-size:13px;font-weight:400;font-family:Inter,sans-serif;opacity:0.8">Tap below to change your vote</span>
+        ${votingOpen ? `<br><span style="font-size:13px;font-weight:400;font-family:Inter,sans-serif;opacity:0.8">Tap below to change your vote</span>` : ''}
       </div>`
-    : `<p style="text-align:center;font-size:13px;color:var(--ink-muted);margin-top:12px">Cast your vote for ${friend.name}</p>`;
+    : votingOpen
+      ? `<p style="text-align:center;font-size:13px;color:var(--ink-muted);margin-top:12px">Cast your vote for ${friend.name}</p>`
+      : `<p style="text-align:center;font-size:13px;color:var(--ink-muted);margin-top:12px">Voting window closed — no vote recorded from you.</p>`;
+
+  const myComment = State.advisingComments[matchObj.matchId];
+
+  // Build vote panel (visible when voted OR window closed)
+  let votePanel = '';
+  const showPanel = voted || !votingOpen;
+  if (showPanel && matchObj.mockAdvisors) {
+    // All participants: mockAdvisors + you
+    const allRows = [...matchObj.mockAdvisors, ...(voted ? [{
+      id: 'you', name: 'You', avatar: 'https://randomuser.me/api/portraits/lego/1.jpg',
+      vote: vote, comment: myComment || null, isYou: true
+    }] : [])];
+    const totalVoted = allRows.filter(a => a.vote !== 'pending').length;
+    const totalApproved = allRows.filter(a => a.vote === 'approved').length;
+    const totalRejected = allRows.filter(a => a.vote === 'rejected').length;
+
+    const rows = allRows.map(a => {
+      const chip = a.vote === 'pending'
+        ? `<span class="advising-vote-chip" style="background:var(--beige-mid);color:var(--ink-muted)">⏳ Waiting</span>`
+        : a.vote === 'approved'
+          ? `<span class="advising-vote-chip approved">👍 Approved</span>`
+          : `<span class="advising-vote-chip rejected">👎 Passed</span>`;
+      const replyKey = matchObj.matchId + '_' + a.id;
+      const existingReply = State.advisingReplies[replyKey];
+      const commentBlock = a.comment ? `
+        <div class="vote-panel-comment">"${a.comment}"</div>
+        ${existingReply
+          ? `<div class="vote-panel-reply">↩ You: "${existingReply}"</div>`
+          : !a.isYou ? `<div class="reply-input-row">
+              <input class="reply-input" id="ri-${replyKey}" placeholder="Reply…">
+              <button class="reply-btn" onclick="addAdvisingReply('${matchObj.matchId}','${a.id}',document.getElementById('ri-${replyKey}').value)">↑</button>
+            </div>` : ''
+        }` : '';
+      return `
+        <div class="vote-panel-row">
+          <img class="vote-panel-avatar" src="${a.avatar}" alt="${a.name}">
+          <div class="vote-panel-info">
+            <div style="display:flex;align-items:center;justify-content:space-between">
+              <span class="vote-panel-name">${a.name}${a.isYou ? ' <span style="font-size:10px;background:var(--teal-light);color:var(--teal);padding:1px 6px;border-radius:10px;font-weight:600">you</span>' : ''}</span>
+              ${chip}
+            </div>
+            ${commentBlock}
+          </div>
+        </div>`;
+    }).join('');
+
+    votePanel = `
+      <div class="vote-panel">
+        <div class="vote-panel-header">${totalVoted} voted · ${totalApproved} approved · ${totalRejected} passed</div>
+        ${rows}
+      </div>`;
+  }
+
+  const actionBtns = votingOpen ? `
+    <div class="rec-action-row">
+      <button class="btn-thumb btn-thumb-down" data-action="advising-reject"  data-id="${matchObj.matchId}">👎</button>
+      <button class="btn-thumb btn-thumb-up"   data-action="advising-approve" data-id="${matchObj.matchId}">👍</button>
+    </div>` : '';
 
   return `
     <div class="rec-detail-screen">
@@ -2893,19 +3126,10 @@ function renderAdvisingDetail() {
           <div class="profile-tags">${tags}</div>
         </div>
       </div>
-
+      ${countdownBar}
       ${voteArea}
-
-      ${State.advisingComments[matchObj.matchId] ? `
-        <div style="background:var(--teal-pale);border-left:3px solid var(--teal-mid);border-radius:0 8px 8px 0;padding:10px 14px;margin:8px 0;font-size:13px;color:var(--ink-soft);font-style:italic;line-height:1.5">
-          <span style="font-size:10px;font-weight:600;font-style:normal;color:var(--teal);text-transform:uppercase;letter-spacing:0.05em;display:block;margin-bottom:3px">Your note</span>
-          "${State.advisingComments[matchObj.matchId]}"
-        </div>` : ''}
-
-      <div class="rec-action-row">
-        <button class="btn-thumb btn-thumb-down" data-action="advising-reject"  data-id="${matchObj.matchId}" title="Pass">👎</button>
-        <button class="btn-thumb btn-thumb-up"   data-action="advising-approve" data-id="${matchObj.matchId}" title="Approve">👍</button>
-      </div>
+      ${actionBtns}
+      ${votePanel}
     </div>`;
 }
 
@@ -3005,7 +3229,6 @@ document.addEventListener('click', e => {
   if (e.target.classList.contains('modal-overlay')) {
     if (State.confirmingBestFriendId !== null) cancelBestFriendConfirm();
     else if (State.confirmingModeSwitch) cancelModeSwitch();
-    else if (State.showChatStartModal) cancelChatStart();
     else if (State.showChatShareModal) cancelChatShare();
     else if (State.showAdvisingCommentModal) skipAdvisingComment();
     return;
@@ -3040,13 +3263,12 @@ document.addEventListener('click', e => {
     case 'accept-bf-request':      acceptBFRequest();                 break;
     case 'confirm-mode-switch':    confirmModeSwitch();               break;
     case 'cancel-mode-switch':     cancelModeSwitch();                break;
-    case 'open-chat':              openChatStartModal(id);            break;
+    case 'open-chat':              openChat(id);                      break;
+    case 'skip-voting-window':     skipVotingWindow(id);              break;
     case 'back-from-chat':         goToScreen('matches');             break;
     case 'open-chat-share':        openChatShareModal();              break;
     case 'confirm-chat-share':     confirmChatShare();                break;
     case 'cancel-chat-share':      cancelChatShare();                 break;
-    case 'confirm-chat-start':     confirmChatStart();                break;
-    case 'cancel-chat-start':      cancelChatStart();                 break;
     case 'submit-advising-comment': {
       const ta = document.getElementById('advising-comment-input');
       submitAdvisingComment(ta ? ta.value.trim() : '');
