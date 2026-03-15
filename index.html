@@ -1338,6 +1338,22 @@
       flex-shrink: 0;
     }
 
+    .friend-dating-card.is-bff {
+      border: 2px solid var(--gold);
+      background: linear-gradient(135deg, rgba(201,169,110,0.07) 0%, rgba(201,169,110,0.16) 100%);
+    }
+    .bff-label {
+      font-size: 10px;
+      background: var(--gold);
+      color: white;
+      padding: 2px 7px;
+      border-radius: 20px;
+      font-weight: 600;
+      margin-left: 6px;
+      vertical-align: middle;
+      font-family: 'Inter', sans-serif;
+    }
+
     /* ════════════════════════════
        BF PENDING STATE
     ════════════════════════════ */
@@ -1659,6 +1675,7 @@ const DATING_FRIENDS = [
     name: 'Jenny',
     age: 27,
     avatar: 'https://randomuser.me/api/portraits/women/32.jpg',
+    youAreBFF: true,
     matches: [
       {
         matchId: 'jm1',
@@ -1700,6 +1717,7 @@ const DATING_FRIENDS = [
     name: 'Chris',
     age: 31,
     avatar: 'https://randomuser.me/api/portraits/men/42.jpg',
+    youAreBFF: true,
     matches: [
       {
         matchId: 'cm1',
@@ -1827,6 +1845,11 @@ const State = {
   advisingMatchId: null,         // matchId being voted on
   advisingVotes: {},             // { matchId: 'approved' | 'rejected' }
   advisingPhotoIndex: {},        // { matchId: photoIndex }
+  advisingComments: {},          // { matchId: comment string }
+  showAdvisingCommentModal: false,
+  advisingCommentPending: null,  // {matchId, vote} while modal open
+  showChatStartModal: false,
+  pendingChatMatchId: null,
 };
 
 // ══════════════════════════════════════════════
@@ -2036,6 +2059,36 @@ function cancelBestFriendConfirm() {
   State.confirmingBestFriendId = null;
   render();
 }
+function openChatStartModal(matchId) {
+  State.pendingChatMatchId = matchId;
+  State.showChatStartModal = true;
+  render();
+}
+function confirmChatStart() {
+  const matchId = State.pendingChatMatchId;
+  State.showChatStartModal = false;
+  State.pendingChatMatchId = null;
+  const match = getMatch(matchId);
+  if (match) match.chatStarted = true;
+  openChat(matchId);
+}
+function cancelChatStart() {
+  State.showChatStartModal = false;
+  State.pendingChatMatchId = null;
+  render();
+}
+function submitAdvisingComment(comment) {
+  if (!State.advisingCommentPending) return;
+  if (comment) State.advisingComments[State.advisingCommentPending.matchId] = comment;
+  State.showAdvisingCommentModal = false;
+  State.advisingCommentPending = null;
+  render();
+}
+function skipAdvisingComment() {
+  State.showAdvisingCommentModal = false;
+  State.advisingCommentPending = null;
+  render();
+}
 
 function getFriendActivity(friendId) {
   let voted = 0, approved = 0;
@@ -2075,6 +2128,8 @@ function openAdvisingMatch(matchId) {
 }
 function voteAdvisingMatch(matchId, decision) {
   State.advisingVotes[matchId] = decision;
+  State.advisingCommentPending = { matchId, vote: decision };
+  State.showAdvisingCommentModal = true;
   render();
 }
 function nextAdvisingPhoto(matchId) {
@@ -2219,8 +2274,8 @@ function render() {
     const fname = FRIEND_NAMES[State.confirmingBestFriendId - 1];
     const currentBFName = State.bestFriendId ? ` This will replace ${FRIEND_NAMES[State.bestFriendId-1]} as your BFF.` : '';
     modalHTML = `
-      <div class="modal-overlay" data-action="cancel-bf-confirm">
-        <div class="modal-sheet" onclick="event.stopPropagation()">
+      <div class="modal-overlay">
+        <div class="modal-sheet">
           <div class="modal-icon">🤝</div>
           <div class="modal-title">Make ${fname} your BFF?</div>
           <div class="modal-body">Your Best Friend can single-handedly approve a match without requiring the usual majority vote from your friend group.${currentBFName} They must leave a comment whenever they vote.</div>
@@ -2236,8 +2291,8 @@ function render() {
     const targetMode  = State.appMode === 'dating' ? 'Advising' : 'Dating';
     const icon = State.appMode === 'dating' ? '👥' : '💑';
     modalHTML = `
-      <div class="modal-overlay" data-action="cancel-mode-switch">
-        <div class="modal-sheet" onclick="event.stopPropagation()">
+      <div class="modal-overlay">
+        <div class="modal-sheet">
           <div class="modal-icon">${icon}</div>
           <div class="modal-title">Switch to ${targetMode} mode?</div>
           <div class="modal-body">You are currently in <strong>${currentMode}</strong> mode. Would you like to switch to <strong>${targetMode}</strong> mode?</div>
@@ -2248,11 +2303,27 @@ function render() {
           </div>
         </div>
       </div>`;
+  } else if (State.showChatStartModal) {
+    const cm = getMatch(State.pendingChatMatchId);
+    const cname = cm ? cm.profile.name : '';
+    modalHTML = `
+      <div class="modal-overlay">
+        <div class="modal-sheet">
+          <div class="modal-icon">💬</div>
+          <div class="modal-title">Start chatting with ${cname}?</div>
+          <div class="modal-body">Once you start chatting, voting is closed — no additional friends can participate in the approval process.</div>
+          <div class="modal-warning">Make sure you're happy with the votes before opening the chat.</div>
+          <div class="modal-actions">
+            <button class="modal-btn-yes" data-action="confirm-chat-start">Yes, start chatting</button>
+            <button class="modal-btn-back" data-action="cancel-chat-start">Go back</button>
+          </div>
+        </div>
+      </div>`;
   } else if (State.showChatShareModal) {
     const bfName = State.bestFriendId ? FRIEND_NAMES[State.bestFriendId - 1] : 'your Best Friend';
     modalHTML = `
-      <div class="modal-overlay" data-action="cancel-chat-share">
-        <div class="modal-sheet" onclick="event.stopPropagation()">
+      <div class="modal-overlay">
+        <div class="modal-sheet">
           <div class="modal-icon">👀</div>
           <div class="modal-title">Share chat with ${bfName}?</div>
           <div class="modal-body">Do you want to share this chat with ${bfName}? Your match will not be aware, but ${bfName} will be able to follow along with messages as they come in.</div>
@@ -2260,6 +2331,26 @@ function render() {
           <div class="modal-actions">
             <button class="modal-btn-yes" data-action="confirm-chat-share">Yes, let ${bfName} follow along</button>
             <button class="modal-btn-back" data-action="cancel-chat-share">Go back</button>
+          </div>
+        </div>
+      </div>`;
+  } else if (State.showAdvisingCommentModal && State.advisingCommentPending) {
+    const pending = State.advisingCommentPending;
+    const friend = getAdvisingFriend();
+    const matchObj = friend ? friend.matches.find(m => m.matchId === pending.matchId) : null;
+    const pname = matchObj ? matchObj.profile.name : 'this match';
+    const voteWord = pending.vote === 'approved' ? 'approved 👍' : 'passed 👎';
+    const fname = friend ? friend.name : 'your friend';
+    modalHTML = `
+      <div class="modal-overlay">
+        <div class="modal-sheet">
+          <div class="modal-icon">${pending.vote === 'approved' ? '👍' : '👎'}</div>
+          <div class="modal-title">Leave a note?</div>
+          <div class="modal-body">You ${voteWord} on ${pname}. Want to add a short comment to explain your vote to ${fname}?</div>
+          <textarea id="advising-comment-input" style="width:100%;border:1.5px solid var(--beige-mid);border-radius:12px;padding:12px;font-size:14px;font-family:Inter,sans-serif;background:var(--beige-pale);outline:none;color:var(--ink);resize:none;margin:12px 0 16px;display:block;box-sizing:border-box" rows="3" placeholder="e.g. Their profile seemed really genuine…"></textarea>
+          <div class="modal-actions">
+            <button class="modal-btn-yes" data-action="submit-advising-comment">Add Note</button>
+            <button class="modal-btn-back" data-action="skip-advising-comment">Skip</button>
           </div>
         </div>
       </div>`;
@@ -2437,7 +2528,10 @@ function renderApproval() {
     return `<img class="friend-stack-avatar" src="${f.avatar}" alt="${f.name}" style="${ring};${crownStyle}">`;
   }).join('');
 
-  const friendCards = match.friends.map(f => {
+  const sortedFriends = [...match.friends].sort((a, b) =>
+    State.bestFriendId === a.id ? -1 : State.bestFriendId === b.id ? 1 : 0
+  );
+  const friendCards = sortedFriends.map(f => {
     const isBF = State.bestFriendId === f.id;
     const voteLabel = f.vote === 'pending'  ? '⏳ Waiting…'
                     : f.vote === 'approved' ? '✓ Approved'
@@ -2526,7 +2620,11 @@ function renderApproval() {
       ${!State.bestFriendId ? `<p style="font-size:11px;color:var(--ink-muted);text-align:center;margin-bottom:10px">Go to <button class="friends-list-link" data-action="go-friends-list" style="font-size:11px">Friends List</button> to designate a Best Friend.</p>` : ''}
       <div style="padding:0 4px">${friendCards}</div>
 
-      ${!noPending ? `
+      ${match.chatStarted ? `
+        <div style="text-align:center;padding:12px 16px;background:var(--teal-pale);border-radius:var(--radius);margin-top:8px;font-size:13px;color:var(--teal);font-weight:500">
+          💬 Chat started — voting is now closed.
+        </div>
+      ` : !noPending ? `
         <button class="simulate-btn" data-action="simulate-vote" data-id="${match.matchId}">
           ✦ Simulate a friend vote
         </button>
@@ -2669,6 +2767,23 @@ function renderFriendsList() {
 
 /* ── Advising: friends list ── */
 function renderAdvisingFriends() {
+  const bffFriends = DATING_FRIENDS.filter(f => f.youAreBFF);
+  let bffBanner = '';
+  if (bffFriends.length > 0) {
+    const names = bffFriends.map(f => f.name).join(' & ');
+    const avatars = bffFriends.map(f =>
+      `<img src="${f.avatar}" alt="${f.name}" style="width:32px;height:32px;border-radius:50%;border:2px solid var(--gold);object-fit:cover;margin-right:-8px">`
+    ).join('');
+    bffBanner = `
+      <div style="background:linear-gradient(135deg,rgba(201,169,110,0.12),rgba(201,169,110,0.24));border:1.5px solid rgba(201,169,110,0.45);border-radius:var(--radius);padding:14px 16px;margin-bottom:16px;display:flex;align-items:center;gap:12px">
+        <div style="display:flex;margin-right:4px">${avatars}</div>
+        <div>
+          <div style="font-weight:700;font-size:14px;color:#8a6920">Your BFF${bffFriends.length > 1 ? 's' : ''}: ${names}</div>
+          <div style="font-size:12px;color:var(--ink-muted);margin-top:2px">They've made you their Best Friend — your vote carries extra weight.</div>
+        </div>
+      </div>`;
+  }
+
   const items = DATING_FRIENDS.map(f => {
     const total   = f.matches.length;
     const voted   = f.matches.filter(m => State.advisingVotes[m.matchId]).length;
@@ -2676,11 +2791,13 @@ function renderAdvisingFriends() {
     const sub = unvoted > 0
       ? `${unvoted} new match${unvoted > 1 ? 'es' : ''} to review`
       : `All ${total} match${total > 1 ? 'es' : ''} reviewed ✓`;
+    const isBFF = !!f.youAreBFF;
+    const bffTag = isBFF ? `<span class="bff-label">⭐ Your BFF</span>` : '';
     return `
-      <div class="friend-dating-card" data-action="open-advising-friend" data-id="${f.id}">
+      <div class="friend-dating-card ${isBFF ? 'is-bff' : ''}" data-action="open-advising-friend" data-id="${f.id}">
         <img class="friend-dating-avatar" src="${f.avatar}" alt="${f.name}">
         <div class="friend-dating-info">
-          <div class="friend-dating-name">${f.name}</div>
+          <div class="friend-dating-name">${f.name}${bffTag}</div>
           <div class="friend-dating-sub">${sub}</div>
         </div>
         ${unvoted > 0 ? `<span class="nav-badge" style="position:static;margin-right:4px">${unvoted}</span>` : ''}
@@ -2691,7 +2808,8 @@ function renderAdvisingFriends() {
   return `
     <div class="advising-friends-screen">
       <p class="matches-screen-title">Friends</p>
-      <p class="matches-screen-sub">Your friends who are dating — help them find the one.</p>
+      <p class="matches-screen-sub" style="margin-bottom:16px">Your friends who are dating — help them find the one.</p>
+      ${bffBanner}
       ${items}
     </div>`;
 }
@@ -2777,6 +2895,12 @@ function renderAdvisingDetail() {
       </div>
 
       ${voteArea}
+
+      ${State.advisingComments[matchObj.matchId] ? `
+        <div style="background:var(--teal-pale);border-left:3px solid var(--teal-mid);border-radius:0 8px 8px 0;padding:10px 14px;margin:8px 0;font-size:13px;color:var(--ink-soft);font-style:italic;line-height:1.5">
+          <span style="font-size:10px;font-weight:600;font-style:normal;color:var(--teal);text-transform:uppercase;letter-spacing:0.05em;display:block;margin-bottom:3px">Your note</span>
+          "${State.advisingComments[matchObj.matchId]}"
+        </div>` : ''}
 
       <div class="rec-action-row">
         <button class="btn-thumb btn-thumb-down" data-action="advising-reject"  data-id="${matchObj.matchId}" title="Pass">👎</button>
@@ -2877,6 +3001,16 @@ document.addEventListener('touchend', e => {
 // ══════════════════════════════════════════════
 
 document.addEventListener('click', e => {
+  // Backdrop click dismisses any open modal
+  if (e.target.classList.contains('modal-overlay')) {
+    if (State.confirmingBestFriendId !== null) cancelBestFriendConfirm();
+    else if (State.confirmingModeSwitch) cancelModeSwitch();
+    else if (State.showChatStartModal) cancelChatStart();
+    else if (State.showChatShareModal) cancelChatShare();
+    else if (State.showAdvisingCommentModal) skipAdvisingComment();
+    return;
+  }
+
   const el     = e.target.closest('[data-action]');
   if (!el) return;
   const action = el.dataset.action;
@@ -2906,11 +3040,19 @@ document.addEventListener('click', e => {
     case 'accept-bf-request':      acceptBFRequest();                 break;
     case 'confirm-mode-switch':    confirmModeSwitch();               break;
     case 'cancel-mode-switch':     cancelModeSwitch();                break;
-    case 'open-chat':              openChat(id);                      break;
+    case 'open-chat':              openChatStartModal(id);            break;
     case 'back-from-chat':         goToScreen('matches');             break;
     case 'open-chat-share':        openChatShareModal();              break;
     case 'confirm-chat-share':     confirmChatShare();                break;
     case 'cancel-chat-share':      cancelChatShare();                 break;
+    case 'confirm-chat-start':     confirmChatStart();                break;
+    case 'cancel-chat-start':      cancelChatStart();                 break;
+    case 'submit-advising-comment': {
+      const ta = document.getElementById('advising-comment-input');
+      submitAdvisingComment(ta ? ta.value.trim() : '');
+      break;
+    }
+    case 'skip-advising-comment':  skipAdvisingComment();             break;
     case 'add-friend':             openAddFriend();                   break;
     case 'open-advising-friend':   openAdvisingFriend(id);            break;
     case 'open-advising-match':    openAdvisingMatch(id);             break;
