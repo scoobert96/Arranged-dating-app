@@ -1012,6 +1012,175 @@
       to   { transform: scale(1) rotate(0deg); opacity: 1; }
     }
     .vote-badge-new { animation: voteReveal 0.35s cubic-bezier(0.34,1.56,0.64,1); }
+
+    /* ════════════════════════════
+       MODE BACKGROUNDS
+    ════════════════════════════ */
+    .app-shell.advising-mode { background: #d4eae8; }
+
+    /* ════════════════════════════
+       ADVISOR REMINDER BUBBLE
+    ════════════════════════════ */
+    .advisor-bubble {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      z-index: 15;
+    }
+    .advisor-bubble img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 2.5px solid white;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.35);
+      object-fit: cover;
+    }
+    .advisor-bubble-name {
+      font-size: 10px;
+      font-weight: 700;
+      color: white;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.7);
+      margin-top: 4px;
+      background: rgba(0,0,0,0.38);
+      padding: 2px 7px;
+      border-radius: 10px;
+      letter-spacing: 0.02em;
+    }
+
+    /* ════════════════════════════
+       BEST FRIEND / ADVISOR
+    ════════════════════════════ */
+    .friend-card.is-best-friend {
+      background: linear-gradient(135deg, rgba(201,169,110,0.1) 0%, rgba(201,169,110,0.18) 100%);
+      border: 1.5px solid rgba(201,169,110,0.45);
+    }
+    .best-friend-badge {
+      font-size: 10px;
+      background: var(--gold);
+      color: white;
+      padding: 2px 7px;
+      border-radius: 20px;
+      font-weight: 600;
+      vertical-align: middle;
+      margin-left: 5px;
+    }
+    .btn-designate {
+      background: none;
+      border: 1.5px solid var(--beige-mid);
+      border-radius: 20px;
+      font-size: 10px;
+      padding: 3px 9px;
+      color: var(--ink-muted);
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.18s;
+      font-family: 'Inter', sans-serif;
+    }
+    .btn-designate.active { background: var(--gold); border-color: var(--gold); color: white; }
+    .btn-designate:active { opacity: 0.8; }
+
+    .best-friend-unlock {
+      background: linear-gradient(135deg, #c9a96e 0%, #dfc07a 100%);
+      border-radius: var(--radius);
+      padding: 22px;
+      text-align: center;
+      color: white;
+      margin-bottom: 16px;
+    }
+    .best-friend-unlock h3 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 19px;
+      font-weight: 700;
+      margin-bottom: 5px;
+    }
+    .best-friend-unlock p { font-size: 13px; opacity: 0.9; margin-bottom: 14px; }
+
+    /* ════════════════════════════
+       ADVISING MODE SCREENS
+    ════════════════════════════ */
+    .advising-friends-screen { padding: 20px 16px 100px; }
+    .advising-matches-screen { padding: 20px 16px 100px; }
+
+    .friend-dating-card {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 16px;
+      background: white;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 12px;
+      cursor: pointer;
+      transition: transform 0.15s;
+    }
+    .friend-dating-card:active { transform: scale(0.98); }
+    .friend-dating-avatar {
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      object-fit: cover;
+      flex-shrink: 0;
+      border: 2px solid var(--teal-light);
+    }
+    .friend-dating-info { flex: 1; }
+    .friend-dating-name {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 2px;
+    }
+    .friend-dating-sub { font-size: 12px; color: var(--ink-muted); }
+    .friend-dating-arrow { font-size: 24px; color: var(--teal-mid); font-weight: 300; }
+
+    .advising-match-card {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px;
+      background: white;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 10px;
+      cursor: pointer;
+      transition: transform 0.15s;
+    }
+    .advising-match-card:active { transform: scale(0.98); }
+    .advising-match-img {
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+    .advising-match-info { flex: 1; }
+    .advising-match-name {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 17px;
+      font-weight: 600;
+      color: var(--ink);
+    }
+    .advising-match-sub { font-size: 12px; color: var(--ink-muted); margin-top: 2px; }
+
+    .advising-vote-chip {
+      font-size: 12px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 20px;
+      flex-shrink: 0;
+    }
+    .advising-vote-chip.approved { background: var(--teal-light); color: var(--teal); }
+    .advising-vote-chip.rejected { background: var(--redwood-light); color: var(--redwood); }
+    .advising-new-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--redwood-mid);
+      flex-shrink: 0;
+    }
   </style>
 </head>
 <body>
@@ -1021,7 +1190,7 @@
 
 <script>
 // ══════════════════════════════════════════════
-// MOCK DATA
+// MOCK DATA — Dating profiles
 // ══════════════════════════════════════════════
 
 const PROFILES = [
@@ -1183,120 +1352,117 @@ const PROFILES = [
   }
 ];
 
-// Profiles shown in the Recommendations tab (friend's matches / suggested for you)
-const REC_PROFILES = [
+// ── Friends who use the app for dating (shown in Advising mode) ──
+const DATING_FRIENDS = [
   {
-    id: 101,
-    name: "Aria",
+    id: 'df1',
+    name: 'Jenny',
     age: 27,
-    city: "Denver",
-    photos: [
-      "https://randomuser.me/api/portraits/women/45.jpg",
-      "https://randomuser.me/api/portraits/women/58.jpg",
-      "https://randomuser.me/api/portraits/women/71.jpg",
-      "https://randomuser.me/api/portraits/women/84.jpg",
-    ],
-    bio: "Yoga instructor and part-time astronomer. I navigate by stars and intuition — usually in that order.",
-    prompts: [
-      { q: "My morning ritual is", a: "Tea before words. No exceptions." },
-      { q: "I'll geek out with you about", a: "The fact that we're all made of stardust." },
-    ],
-    tags: ["Yoga", "Astronomy", "Hiking", "Meditation"],
+    avatar: 'https://randomuser.me/api/portraits/women/32.jpg',
+    matches: [
+      {
+        matchId: 'jm1',
+        profile: {
+          id: 201, name: 'Marcus', age: 29, city: 'New York',
+          photos: [
+            'https://randomuser.me/api/portraits/men/32.jpg',
+            'https://randomuser.me/api/portraits/men/45.jpg',
+            'https://randomuser.me/api/portraits/men/58.jpg',
+          ],
+          bio: 'Architect who cooks elaborate dinners for no occasion. I build things by day and experiment in the kitchen by night.',
+          prompts: [
+            { q: 'My ideal first date', a: 'Cooking together. Nowhere to be.' },
+            { q: 'I will always', a: 'Order the thing on the menu I have never heard of.' }
+          ],
+          tags: ['Architecture', 'Cooking', 'Jazz', 'Travel']
+        }
+      },
+      {
+        matchId: 'jm2',
+        profile: {
+          id: 202, name: 'Daniel', age: 30, city: 'Brooklyn',
+          photos: [
+            'https://randomuser.me/api/portraits/men/22.jpg',
+            'https://randomuser.me/api/portraits/men/35.jpg',
+            'https://randomuser.me/api/portraits/men/48.jpg',
+          ],
+          bio: 'Writer and devoted coffee person. I believe in long conversations and short commutes.',
+          prompts: [
+            { q: 'I value most', a: 'Depth — in people, in coffee, in everything.' },
+          ],
+          tags: ['Writing', 'Coffee', 'Books', 'Film']
+        }
+      }
+    ]
   },
   {
-    id: 102,
-    name: "Leila",
-    age: 29,
-    city: "Miami",
-    photos: [
-      "https://randomuser.me/api/portraits/women/50.jpg",
-      "https://randomuser.me/api/portraits/women/63.jpg",
-      "https://randomuser.me/api/portraits/women/76.jpg",
-      "https://randomuser.me/api/portraits/women/89.jpg",
-    ],
-    bio: "Marine biologist who salsa dances on weekends. I'm as comfortable in a reef as I am on a dance floor.",
-    prompts: [
-      { q: "Best thing about me", a: "I will never make you feel boring for caring." },
-      { q: "A weird talent I have", a: "Identifying fish species from terrible underwater photos." },
-    ],
-    tags: ["Marine Biology", "Dancing", "Diving", "Beach"],
-  },
-  {
-    id: 103,
-    name: "Tara",
-    age: 25,
-    city: "Portland",
-    photos: [
-      "https://randomuser.me/api/portraits/women/53.jpg",
-      "https://randomuser.me/api/portraits/women/66.jpg",
-      "https://randomuser.me/api/portraits/women/80.jpg",
-      "https://randomuser.me/api/portraits/women/93.jpg",
-    ],
-    bio: "Graphic novelist, dog mom, avid thrifter. My apartment looks like a gallery that also has a dog bed in it.",
-    prompts: [
-      { q: "I'm proudest of", a: "My graphic novel got reviewed in a real magazine once." },
-      { q: "Comfort for me is", a: "Rainy day, a pile of graphic novels, my dog on my feet." },
-    ],
-    tags: ["Comics", "Art", "Dogs", "Thrifting"],
-  },
-  {
-    id: 104,
-    name: "Maya",
+    id: 'df2',
+    name: 'Chris',
     age: 31,
-    city: "Nashville",
-    photos: [
-      "https://randomuser.me/api/portraits/women/56.jpg",
-      "https://randomuser.me/api/portraits/women/69.jpg",
-      "https://randomuser.me/api/portraits/women/82.jpg",
-      "https://randomuser.me/api/portraits/women/96.jpg",
-    ],
-    bio: "Singer-songwriter who also works in data science. The left and right sides of my brain are in constant negotiation.",
-    prompts: [
-      { q: "Something I made", a: "An album about statistical models. It's better than it sounds." },
-      { q: "I value in a person", a: "The ability to be deeply silly and deeply serious." },
-    ],
-    tags: ["Music", "Data", "Songwriting", "Coffee"],
+    avatar: 'https://randomuser.me/api/portraits/men/42.jpg',
+    matches: [
+      {
+        matchId: 'cm1',
+        profile: {
+          id: 203, name: 'Serena', age: 28, city: 'Boston',
+          photos: [
+            'https://randomuser.me/api/portraits/women/42.jpg',
+            'https://randomuser.me/api/portraits/women/55.jpg',
+          ],
+          bio: 'Data scientist who paints on weekends. I find patterns in everything, including people.',
+          prompts: [
+            { q: 'I find joy in', a: 'Making something that was not there before.' },
+            { q: 'My perfect weekend', a: 'Farmers market, long run, paint-covered hands.' }
+          ],
+          tags: ['Data', 'Painting', 'Running', 'Yoga']
+        }
+      },
+      {
+        matchId: 'cm2',
+        profile: {
+          id: 204, name: 'Lena', age: 27, city: 'Cambridge',
+          photos: [
+            'https://randomuser.me/api/portraits/women/33.jpg',
+            'https://randomuser.me/api/portraits/women/47.jpg',
+          ],
+          bio: 'Molecular biologist by training, gardener at heart. I grow my own herbs and overthink my research.',
+          prompts: [
+            { q: 'A conversation starter', a: 'What is something you changed your mind about recently?' }
+          ],
+          tags: ['Science', 'Gardening', 'Cooking', 'Reading']
+        }
+      }
+    ]
   },
   {
-    id: 105,
-    name: "Jules",
-    age: 28,
-    city: "Phoenix",
-    photos: [
-      "https://randomuser.me/api/portraits/women/59.jpg",
-      "https://randomuser.me/api/portraits/women/72.jpg",
-      "https://randomuser.me/api/portraits/women/85.jpg",
-      "https://randomuser.me/api/portraits/women/98.jpg",
-    ],
-    bio: "Wilderness guide in the summer, ceramics teacher in the winter. I live life seasonally and fully.",
-    prompts: [
-      { q: "My idea of adventure", a: "Trail you've never heard of. No signal. Perfect." },
-      { q: "I'm trying to", a: "Make my pottery less lopsided. Slowly succeeding." },
-    ],
-    tags: ["Outdoors", "Ceramics", "Guiding", "Stargazing"],
-  },
-  {
-    id: 106,
-    name: "Cora",
-    age: 26,
-    city: "New Orleans",
-    photos: [
-      "https://randomuser.me/api/portraits/women/48.jpg",
-      "https://randomuser.me/api/portraits/women/61.jpg",
-      "https://randomuser.me/api/portraits/women/78.jpg",
-      "https://randomuser.me/api/portraits/women/90.jpg",
-    ],
-    bio: "Pastry chef and occasional jazz singer. I believe in butter, low lighting, and a good story.",
-    prompts: [
-      { q: "My superpower is", a: "Making you feel like dinner was the whole event." },
-      { q: "I find beauty in", a: "Old menus. They're like little time capsules." },
-    ],
-    tags: ["Baking", "Jazz", "Food", "History"],
-  },
+    id: 'df3',
+    name: 'Sam',
+    age: 29,
+    avatar: 'https://randomuser.me/api/portraits/women/67.jpg',
+    matches: [
+      {
+        matchId: 'sm1',
+        profile: {
+          id: 205, name: 'Leo', age: 30, city: 'Chicago',
+          photos: [
+            'https://randomuser.me/api/portraits/men/55.jpg',
+            'https://randomuser.me/api/portraits/men/67.jpg',
+            'https://randomuser.me/api/portraits/men/72.jpg',
+          ],
+          bio: 'Music producer and avid cyclist. I make things that make people feel something.',
+          prompts: [
+            { q: 'Life philosophy', a: 'Show up fully or not at all.' },
+            { q: 'You would like me because', a: 'I remember the things people mention once in passing.' }
+          ],
+          tags: ['Music', 'Cycling', 'Production', 'Food']
+        }
+      }
+    ]
+  }
 ];
 
+// ── Advisor friends (for dating mode match approval) ──
 const FRIEND_NAMES = ["Jamie", "Alex", "Morgan", "Taylor", "Jordan"];
-const FRIEND_SEEDS = ["frnd1", "frnd2", "frnd3", "frnd4", "frnd5"];
 
 function makeFriends() {
   return FRIEND_NAMES.map((name, i) => ({
@@ -1312,31 +1478,47 @@ function makeFriends() {
 // ══════════════════════════════════════════════
 
 const State = {
-  screen: 'onboarding',      // 'onboarding'|'discovery'|'match'|'approval'|'matches'|'recommendations'|'rec-detail'
-  appMode: 'dating',         // 'dating' | 'recommending'
+  screen: 'onboarding',     // current screen
+  appMode: 'dating',        // 'dating' | 'recommending'
   profileIndex: 0,
-  photoIndex: {},            // profileId -> current photo index
+  photoIndex: {},           // profileId -> photoIndex
   matches: [],
   activeMatchId: null,
   newMatchId: null,
-  recVotes: {},              // recProfileId -> 'approved' | 'rejected'
-  recPhotoIndex: {},         // recProfileId -> current photo index
-  activeRecId: null,
+  bestFriendId: null,       // advisor friend id (1-5) whose approval alone unlocks
+  // Advising mode
+  advisingFriendId: null,   // DATING_FRIENDS id currently being viewed
+  advisingMatchId: null,    // matchId being voted on
+  advisingVotes: {},        // { matchId: 'approved' | 'rejected' }
+  advisingPhotoIndex: {},   // { matchId: photoIndex }
 };
+
+// ══════════════════════════════════════════════
+// HELPERS
+// ══════════════════════════════════════════════
 
 function currentProfile() { return PROFILES[State.profileIndex] || null; }
 function getMatch(id) { return State.matches.find(m => m.matchId === id); }
 function isUnlocked(match) {
   const approved = match.friends.filter(f => f.vote === 'approved').length;
   const total    = match.friends.filter(f => f.vote !== 'pending').length;
+  // Best friend override
+  if (State.bestFriendId) {
+    const bf = match.friends.find(f => f.id === State.bestFriendId);
+    if (bf && bf.vote === 'approved') return true;
+  }
   if (approved < 3) return false;
   if (total < 5) return true;
   return approved > total / 2;
 }
 function getPhotoIndex(profileId) { return State.photoIndex[profileId] || 0; }
-function getRecPhotoIndex(id) { return State.recPhotoIndex[id] || 0; }
-function getRecVote(id) { return State.recVotes[id] || null; }
-function activeRec() { return REC_PROFILES.find(p => p.id === State.activeRecId); }
+function getAdvisingFriend() { return DATING_FRIENDS.find(f => f.id === State.advisingFriendId) || null; }
+function getAdvisingMatch() {
+  const friend = getAdvisingFriend();
+  if (!friend) return null;
+  return friend.matches.find(m => m.matchId === State.advisingMatchId) || null;
+}
+function getAdvisingPhotoIndex(matchId) { return State.advisingPhotoIndex[matchId] || 0; }
 
 // ══════════════════════════════════════════════
 // ACTIONS
@@ -1344,27 +1526,24 @@ function activeRec() { return REC_PROFILES.find(p => p.id === State.activeRecId)
 
 function selectMode(mode) {
   State.appMode = mode;
-  State.screen = mode === 'recommending' ? 'recommendations' : 'discovery';
+  State.screen = mode === 'recommending' ? 'advising-friends' : 'discovery';
   render();
 }
 
 function toggleMode() {
   State.appMode = State.appMode === 'dating' ? 'recommending' : 'dating';
-  State.screen = State.appMode === 'recommending' ? 'recommendations' : 'discovery';
+  State.screen = State.appMode === 'recommending' ? 'advising-friends' : 'discovery';
   render();
 }
 
-/* ── Card animation helper ── */
+/* ── Card swipe animation ── */
 let _cardAnimating = false;
 
 function animateCard(direction, callback) {
   if (_cardAnimating) return;
   const card = document.querySelector('.profile-card');
   if (!card) { callback(); return; }
-
   _cardAnimating = true;
-
-  // Add stamp overlay
   const photoArea = card.querySelector('.photo-area');
   if (photoArea) {
     const stamp = document.createElement('div');
@@ -1372,12 +1551,8 @@ function animateCard(direction, callback) {
     stamp.textContent = direction === 'right' ? 'LIKE' : 'NOPE';
     photoArea.appendChild(stamp);
   }
-
   card.classList.add(direction === 'right' ? 'card-swipe-right' : 'card-swipe-left');
-  card.addEventListener('animationend', () => {
-    _cardAnimating = false;
-    callback();
-  }, { once: true });
+  card.addEventListener('animationend', () => { _cardAnimating = false; callback(); }, { once: true });
 }
 
 function likeProfile() {
@@ -1397,11 +1572,9 @@ function likeProfile() {
 }
 
 function passProfile() {
-  animateCard('left', () => {
-    State.profileIndex++;
-    render();
-  });
+  animateCard('left', () => { State.profileIndex++; render(); });
 }
+
 function goToScreen(s) { State.screen = s; render(); }
 function goToApproval(matchId) { State.activeMatchId = matchId; State.screen = 'approval'; render(); }
 function keepSwiping() { State.profileIndex++; State.screen = 'discovery'; render(); }
@@ -1431,26 +1604,46 @@ function prevPhoto(profileId) {
   render();
 }
 
-function openRec(recId) { State.activeRecId = recId; State.screen = 'rec-detail'; render(); }
-function nextRecPhoto(recId) {
-  const p = REC_PROFILES.find(r => r.id === recId);
-  if (!p) return;
-  const cur = getRecPhotoIndex(recId);
-  State.recPhotoIndex[recId] = (cur + 1) % p.photos.length;
+function setBestFriend(friendId) {
+  State.bestFriendId = State.bestFriendId === friendId ? null : friendId;
   render();
 }
-function prevRecPhoto(recId) {
-  const p = REC_PROFILES.find(r => r.id === recId);
-  if (!p) return;
-  const cur = getRecPhotoIndex(recId);
-  State.recPhotoIndex[recId] = (cur - 1 + p.photos.length) % p.photos.length;
+
+/* ── Advising mode actions ── */
+function openAdvisingFriend(friendId) {
+  State.advisingFriendId = friendId;
+  State.screen = 'advising-matches';
   render();
 }
-function voteRec(recId, decision) {
-  State.recVotes[recId] = decision;
+function openAdvisingMatch(matchId) {
+  State.advisingMatchId = matchId;
+  State.screen = 'advising-detail';
   render();
 }
-function backFromRec() { State.screen = 'recommendations'; render(); }
+function voteAdvisingMatch(matchId, decision) {
+  State.advisingVotes[matchId] = decision;
+  render();
+}
+function nextAdvisingPhoto(matchId) {
+  const friend = getAdvisingFriend();
+  if (!friend) return;
+  const match = friend.matches.find(m => m.matchId === matchId);
+  if (!match) return;
+  const cur = getAdvisingPhotoIndex(matchId);
+  State.advisingPhotoIndex[matchId] = (cur + 1) % match.profile.photos.length;
+  render();
+}
+function prevAdvisingPhoto(matchId) {
+  const friend = getAdvisingFriend();
+  if (!friend) return;
+  const match = friend.matches.find(m => m.matchId === matchId);
+  if (!match) return;
+  const cur = getAdvisingPhotoIndex(matchId);
+  State.advisingPhotoIndex[matchId] = (cur - 1 + match.profile.photos.length) % match.profile.photos.length;
+  render();
+}
+function backFromAdvisingDetail() { State.screen = 'advising-matches'; render(); }
+function backFromAdvisingMatches() { State.screen = 'advising-friends'; render(); }
 
 // ══════════════════════════════════════════════
 // RENDER
@@ -1458,14 +1651,18 @@ function backFromRec() { State.screen = 'recommendations'; render(); }
 
 function render() {
   const app = document.getElementById('app');
+  const isAdvising = State.appMode === 'recommending';
+
+  // Toggle background for mode
+  app.classList.toggle('advising-mode', isAdvising && State.screen !== 'onboarding');
 
   if (State.screen === 'onboarding') {
     app.innerHTML = renderOnboarding();
     return;
   }
 
-  const modeIcon   = State.appMode === 'recommending' ? '👥' : '💑';
-  const modeLabel  = State.appMode === 'recommending' ? 'Advising' : 'Dating';
+  const modeIcon  = isAdvising ? '👥' : '💑';
+  const modeLabel = isAdvising ? 'Advising' : 'Dating';
 
   let headerHTML = '';
   let screenHTML = '';
@@ -1510,28 +1707,35 @@ function render() {
       screenHTML = `<div class="screen screen-enter">${renderMatchesList()}</div>`;
       break;
     }
-    case 'recommendations': {
-      const recTitle = State.appMode === 'recommending'
-        ? "Your Friends' New Matches"
-        : "Recommended for You";
+    case 'advising-friends': {
       headerHTML = `<div class="app-header">
-        <h2 style="font-size:16px">${recTitle}</h2>
+        <span class="wordmark">Arranged</span>
         <button class="mode-toggle" data-action="toggle-mode">
           <span class="toggle-icon">${modeIcon}</span>
           <span class="toggle-label">${modeLabel}</span>
         </button>
       </div>`;
-      screenHTML = `<div class="screen screen-enter">${renderRecommendations()}</div>`;
+      screenHTML = `<div class="screen screen-enter">${renderAdvisingFriends()}</div>`;
       break;
     }
-    case 'rec-detail': {
-      const rec = activeRec();
-      const name = rec ? rec.name : '';
+    case 'advising-matches': {
+      const friend = getAdvisingFriend();
+      const fname = friend ? friend.name : '';
       headerHTML = `<div class="app-header">
-        <button class="back-btn" data-action="back-rec">&#8592;</button>
-        <h2>${name}</h2>
+        <button class="back-btn" data-action="back-advising-matches">&#8592;</button>
+        <h2>${fname}'s Matches</h2>
       </div>`;
-      screenHTML = `<div class="screen screen-enter">${renderRecDetail()}</div>`;
+      screenHTML = `<div class="screen screen-enter">${renderAdvisingMatches()}</div>`;
+      break;
+    }
+    case 'advising-detail': {
+      const matchObj = getAdvisingMatch();
+      const pname = matchObj ? matchObj.profile.name : '';
+      headerHTML = `<div class="app-header">
+        <button class="back-btn" data-action="back-advising-detail">&#8592;</button>
+        <h2>${pname}</h2>
+      </div>`;
+      screenHTML = `<div class="screen screen-enter">${renderAdvisingDetail()}</div>`;
       break;
     }
   }
@@ -1547,10 +1751,8 @@ function renderOnboarding() {
         <div class="onboarding-screen">
           <div class="onboarding-logo">Arranged</div>
           <p class="onboarding-tagline">Love, with a little help from everyone.</p>
-
           <p class="onboarding-q">How are you using Arranged today?</p>
           <p class="onboarding-sub">You can always switch modes later from the top right.</p>
-
           <div class="mode-cards">
             <div class="mode-card dating-card" data-action="select-dating">
               <div class="mode-card-icon">💑</div>
@@ -1560,7 +1762,7 @@ function renderOnboarding() {
             <div class="mode-card advise-card" data-action="select-recommending">
               <div class="mode-card-icon">👥</div>
               <h3>I'm Advising a Friend</h3>
-              <p>Help a friend find their match — review their potential connections and cast your vote.</p>
+              <p>Help a friend find their match — review their connections and cast your vote.</p>
             </div>
           </div>
         </div>
@@ -1568,13 +1770,24 @@ function renderOnboarding() {
     </div>`;
 }
 
-/* ── Nav ── */
+/* ── Nav — mode-exclusive ── */
 function renderNav() {
-  const dActive   = State.screen === 'discovery' || State.screen === 'match' ? 'active' : '';
-  const mActive   = State.screen === 'matches'   || State.screen === 'approval' ? 'active' : '';
-  const rActive   = State.screen === 'recommendations' || State.screen === 'rec-detail' ? 'active' : '';
-  const unvoted   = REC_PROFILES.filter(p => !getRecVote(p.id)).length;
+  const isAdvising = State.appMode === 'recommending';
 
+  if (isAdvising) {
+    const aActive = ['advising-friends','advising-matches','advising-detail'].includes(State.screen) ? 'active' : '';
+    return `
+      <nav class="bottom-nav">
+        <button class="nav-tab ${aActive}" data-action="go-advising-friends">
+          <span class="nav-icon">👥</span>
+          Friends
+        </button>
+      </nav>`;
+  }
+
+  // Dating mode — Discover + Matches only
+  const dActive = State.screen === 'discovery' || State.screen === 'match' ? 'active' : '';
+  const mActive = State.screen === 'matches'   || State.screen === 'approval' ? 'active' : '';
   return `
     <nav class="bottom-nav">
       <button class="nav-tab ${dActive}" data-action="go-discovery">
@@ -1585,11 +1798,6 @@ function renderNav() {
         <span class="nav-icon">♡</span>
         Matches
         ${State.matches.length > 0 ? `<span class="nav-badge">${State.matches.length}</span>` : ''}
-      </button>
-      <button class="nav-tab ${rActive}" data-action="go-recommendations">
-        <span class="nav-icon">👍</span>
-        Advise
-        ${unvoted > 0 ? `<span class="nav-badge">${unvoted}</span>` : ''}
       </button>
     </nav>`;
 }
@@ -1666,14 +1874,14 @@ function renderMatchScreen() {
       <div class="friend-teaser">
         <div class="teaser-icon">👥</div>
         <h3>Friend Approval Required</h3>
-        <p>Before you can chat, at least <strong>3 friends</strong> need to give their blessing. If 5 friends vote, a majority must approve.</p>
+        <p>Before you can chat, at least <strong>3 friends</strong> need to give their blessing — or designate a <strong>best advisor</strong> whose approval alone unlocks the chat.</p>
       </div>
       <button class="btn-primary" data-action="see-votes" data-id="${match.matchId}">See Friend Votes</button>
       <button class="btn-secondary" data-action="keep-swiping">Keep Swiping</button>
     </div>`;
 }
 
-/* ── Approval ── */
+/* ── Approval (with best friend feature) ── */
 function renderApproval() {
   const match = getMatch(State.activeMatchId);
   if (!match) return '';
@@ -1686,39 +1894,60 @@ function renderApproval() {
   const pct = Math.min(100, Math.round((approved / 3) * 100));
   const progressLabel = unlocked ? 'Approved! ✓' : `${approved} of 3 approvals needed`;
 
-  // Build stacked avatar row (pending friends on top layer, voted beneath)
+  const bf = State.bestFriendId ? match.friends.find(f => f.id === State.bestFriendId) : null;
+  const bfApproved = bf && bf.vote === 'approved';
+
   const stackAvatars = match.friends.map(f => {
     const ring = f.vote === 'approved' ? 'border-color:#2ab5b5'
                : f.vote === 'rejected' ? 'border-color:#a04a38'
                : 'border-color:white';
-    return `<img class="friend-stack-avatar" src="${f.avatar}" alt="${f.name}" style="${ring}">`;
+    const crownStyle = State.bestFriendId === f.id ? 'outline:2.5px solid #c9a96e;outline-offset:2px' : '';
+    return `<img class="friend-stack-avatar" src="${f.avatar}" alt="${f.name}" style="${ring};${crownStyle}">`;
   }).join('');
 
   const friendCards = match.friends.map(f => {
+    const isBF = State.bestFriendId === f.id;
     const voteLabel = f.vote === 'pending'  ? '⏳ Waiting…'
                     : f.vote === 'approved' ? '✓ Approved'
                     : '✕ Passed';
     const subText = f.vote === 'pending'
-      ? 'Hasn\'t voted yet'
+      ? 'Has not voted yet'
       : f.vote === 'approved' ? 'Gave the green light' : 'Had some reservations';
+    const bfBadge = isBF ? '<span class="best-friend-badge">⭐ Best</span>' : '';
     return `
-      <div class="friend-card">
+      <div class="friend-card ${isBF ? 'is-best-friend' : ''}">
         <img class="friend-card-avatar" src="${f.avatar}" alt="${f.name}">
         <div class="friend-card-info">
-          <div class="friend-card-name">${f.name}</div>
+          <div class="friend-card-name">${f.name}${bfBadge}</div>
           <div class="friend-card-sub">${subText}</div>
         </div>
-        <span class="vote-badge ${f.vote}">${voteLabel}</span>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px">
+          <span class="vote-badge ${f.vote}">${voteLabel}</span>
+          <button class="btn-designate ${isBF ? 'active' : ''}" data-action="set-best-friend" data-id="${f.id}">
+            ${isBF ? '⭐ Best' : 'Make Best'}
+          </button>
+        </div>
       </div>`;
   }).join('');
 
-  const unlockedBanner = unlocked ? `
-    <div class="unlocked-banner">
-      <div class="banner-icon">🎉</div>
-      <h3>Your friends approved!</h3>
-      <p>You can now start a conversation with ${p.name}.</p>
-      <button class="btn-chat" data-action="chat-soon">Start Chatting ♥</button>
-    </div>` : '';
+  let unlockedBanner = '';
+  if (unlocked && bfApproved) {
+    unlockedBanner = `
+      <div class="best-friend-unlock">
+        <div style="font-size:28px;margin-bottom:8px">⭐</div>
+        <h3>Best Advisor Override!</h3>
+        <p>${bf.name} gave the green light — that's all you need.</p>
+        <button class="btn-chat" data-action="chat-soon" style="background:rgba(255,255,255,0.2);color:white;margin-top:2px">Start Chatting ♥</button>
+      </div>`;
+  } else if (unlocked) {
+    unlockedBanner = `
+      <div class="unlocked-banner">
+        <div class="banner-icon">🎉</div>
+        <h3>Your friends approved!</h3>
+        <p>You can now start a conversation with ${p.name}.</p>
+        <button class="btn-chat" data-action="chat-soon">Start Chatting ♥</button>
+      </div>`;
+  }
 
   return `
     <div class="approval-screen">
@@ -1748,7 +1977,8 @@ function renderApproval() {
 
       ${unlockedBanner}
 
-      <div style="padding: 0 4px">${friendCards}</div>
+      <p style="font-size:11px;color:var(--ink-muted);text-align:center;margin-bottom:10px;font-weight:500;letter-spacing:0.04em;text-transform:uppercase">Tap "Make Best" to give one friend override power</p>
+      <div style="padding:0 4px">${friendCards}</div>
 
       ${!noPending ? `
         <button class="simulate-btn" data-action="simulate-vote" data-id="${match.matchId}">
@@ -1777,13 +2007,13 @@ function renderMatchesList() {
   }
 
   const lockedItems = locked.map(m => {
-    const approved = m.friends.filter(f => f.vote === 'approved').length;
+    const approvedCount = m.friends.filter(f => f.vote === 'approved').length;
     return `
       <div class="match-list-item" data-action="open-approval" data-id="${m.matchId}">
         <img class="match-list-img" src="${m.profile.photos[0]}" alt="${m.profile.name}">
         <div class="match-list-info">
           <div class="match-list-name">${m.profile.name}, ${m.profile.age}</div>
-          <div class="match-list-status">Awaiting friends · ${approved}/3 approvals</div>
+          <div class="match-list-status">Awaiting friends · ${approvedCount}/3 approvals</div>
         </div>
         <div class="match-list-action"><span class="lock-icon">🔒</span></div>
       </div>`;
@@ -1810,46 +2040,69 @@ function renderMatchesList() {
     </div>`;
 }
 
-/* ── Recommendations list ── */
-function renderRecommendations() {
-  const advising = State.appMode === 'recommending';
-  const noteText = advising
-    ? '👍 Tap a profile to vote — your friend is counting on your advice!'
-    : '✦ Your friends handpicked these for you. Let them know what you think!';
-
-  const items = REC_PROFILES.map(p => {
-    const vote   = getRecVote(p.id);
-    const voted  = !!vote;
-    const chipHTML = voted
-      ? `<span class="rec-vote-chip ${vote}">${vote === 'approved' ? '👍' : '👎'} ${vote === 'approved' ? 'Approved' : 'Passed'}</span>`
-      : `<div class="rec-new-dot"></div>`;
-
+/* ── Advising: friends list ── */
+function renderAdvisingFriends() {
+  const items = DATING_FRIENDS.map(f => {
+    const total   = f.matches.length;
+    const voted   = f.matches.filter(m => State.advisingVotes[m.matchId]).length;
+    const unvoted = total - voted;
+    const sub = unvoted > 0
+      ? `${unvoted} new match${unvoted > 1 ? 'es' : ''} to review`
+      : `All ${total} match${total > 1 ? 'es' : ''} reviewed ✓`;
     return `
-      <div class="rec-list-item ${voted ? 'voted' : ''}" data-action="open-rec" data-id="${p.id}">
-        <img class="rec-list-img" src="${p.photos[0]}" alt="${p.name}">
-        <div class="rec-list-info">
-          <div class="rec-list-name ${voted ? 'voted' : ''}">${p.name}, ${p.age}</div>
-          <div class="rec-list-sub">📍 ${p.city}</div>
+      <div class="friend-dating-card" data-action="open-advising-friend" data-id="${f.id}">
+        <img class="friend-dating-avatar" src="${f.avatar}" alt="${f.name}">
+        <div class="friend-dating-info">
+          <div class="friend-dating-name">${f.name}</div>
+          <div class="friend-dating-sub">${sub}</div>
         </div>
-        ${chipHTML}
+        ${unvoted > 0 ? `<span class="nav-badge" style="position:static;margin-right:4px">${unvoted}</span>` : ''}
+        <span class="friend-dating-arrow">›</span>
       </div>`;
   }).join('');
 
   return `
-    <div class="rec-screen">
-      <p class="rec-screen-sub">${advising ? "Here's who your friend matched with:" : "Handpicked by your circle:"}</p>
-      <div class="rec-vote-note">${noteText}</div>
+    <div class="advising-friends-screen">
+      <p class="matches-screen-title">Friends</p>
+      <p class="matches-screen-sub">Your friends who are dating — help them find the one.</p>
       ${items}
     </div>`;
 }
 
-/* ── Rec detail ── */
-function renderRecDetail() {
-  const p = activeRec();
-  if (!p) return '';
-  const vote    = getRecVote(p.id);
-  const voted   = !!vote;
-  const photoIdx = getRecPhotoIndex(p.id);
+/* ── Advising: friend's matches list ── */
+function renderAdvisingMatches() {
+  const friend = getAdvisingFriend();
+  if (!friend) return '';
+
+  const items = friend.matches.map(m => {
+    const vote  = State.advisingVotes[m.matchId];
+    const voted = !!vote;
+    const chip  = voted
+      ? `<span class="advising-vote-chip ${vote}">${vote === 'approved' ? '👍 Approved' : '👎 Passed'}</span>`
+      : `<div class="advising-new-dot"></div>`;
+    return `
+      <div class="advising-match-card" data-action="open-advising-match" data-id="${m.matchId}">
+        <img class="advising-match-img" src="${m.profile.photos[0]}" alt="${m.profile.name}">
+        <div class="advising-match-info">
+          <div class="advising-match-name">${m.profile.name}, ${m.profile.age}</div>
+          <div class="advising-match-sub">📍 ${m.profile.city}</div>
+        </div>
+        ${chip}
+      </div>`;
+  }).join('');
+
+  return `<div class="advising-matches-screen">${items}</div>`;
+}
+
+/* ── Advising: match detail with friend bubble ── */
+function renderAdvisingDetail() {
+  const friend   = getAdvisingFriend();
+  const matchObj = getAdvisingMatch();
+  if (!friend || !matchObj) return '';
+  const p        = matchObj.profile;
+  const vote     = State.advisingVotes[matchObj.matchId];
+  const voted    = !!vote;
+  const photoIdx = getAdvisingPhotoIndex(matchObj.matchId);
 
   const dots = p.photos.map((_, i) =>
     `<div class="photo-dot ${i === photoIdx ? 'active' : ''}"></div>`
@@ -1866,23 +2119,27 @@ function renderRecDetail() {
   const voteArea = voted
     ? `<div class="voted-overlay-banner ${vote}">
         ${vote === 'approved' ? '👍 You approved this match' : '👎 You passed on this match'}
-        <br><span style="font-size:13px;font-weight:400;font-family:Inter,sans-serif;opacity:0.8">Tap 👎 or 👍 to change your vote</span>
+        <br><span style="font-size:13px;font-weight:400;font-family:Inter,sans-serif;opacity:0.8">Tap below to change your vote</span>
       </div>`
-    : `<p style="text-align:center;font-size:13px;color:var(--ink-muted);margin-top:12px">Cast your vote below</p>`;
+    : `<p style="text-align:center;font-size:13px;color:var(--ink-muted);margin-top:12px">Cast your vote for ${friend.name}</p>`;
 
   return `
     <div class="rec-detail-screen">
       <div class="profile-card">
-        <div class="photo-area" data-profile-id="${p.id}" data-is-rec="true">
+        <div class="photo-area" data-advising-match-id="${matchObj.matchId}">
           <img src="${p.photos[photoIdx]}" alt="${p.name}">
           <div class="photo-overlay">
-            <div class="photo-tap-left"  data-action="prev-rec-photo" data-id="${p.id}"></div>
-            <div class="photo-tap-right" data-action="next-rec-photo" data-id="${p.id}"></div>
+            <div class="photo-tap-left"  data-action="prev-advising-photo" data-id="${matchObj.matchId}"></div>
+            <div class="photo-tap-right" data-action="next-advising-photo" data-id="${matchObj.matchId}"></div>
           </div>
           <div class="photo-dots">${dots}</div>
           <div class="profile-name-overlay">
             <h1>${p.name}, ${p.age}</h1>
             <p class="profile-city">📍 ${p.city}</p>
+          </div>
+          <div class="advisor-bubble">
+            <img src="${friend.avatar}" alt="${friend.name}">
+            <span class="advisor-bubble-name">${friend.name}</span>
           </div>
         </div>
         <div class="profile-body">
@@ -1895,8 +2152,8 @@ function renderRecDetail() {
       ${voteArea}
 
       <div class="rec-action-row">
-        <button class="btn-thumb btn-thumb-down" data-action="rec-reject" data-id="${p.id}" title="Pass">👎</button>
-        <button class="btn-thumb btn-thumb-up"   data-action="rec-approve" data-id="${p.id}" title="Approve">👍</button>
+        <button class="btn-thumb btn-thumb-down" data-action="advising-reject"  data-id="${matchObj.matchId}" title="Pass">👎</button>
+        <button class="btn-thumb btn-thumb-up"   data-action="advising-approve" data-id="${matchObj.matchId}" title="Approve">👍</button>
       </div>
     </div>`;
 }
@@ -1919,20 +2176,14 @@ document.addEventListener('touchend', e => {
   if (!_touchPhotoEl) return;
   const dx = e.changedTouches[0].clientX - _touchStartX;
   const dy = e.changedTouches[0].clientY - _touchStartY;
-  // Only treat as horizontal swipe if x-movement dominates
-  if (Math.abs(dx) < 35 || Math.abs(dy) > Math.abs(dx) * 0.8) {
-    _touchPhotoEl = null;
-    return;
-  }
-  const pid = parseInt(_touchPhotoEl.dataset.profileId);
-  const isRec = _touchPhotoEl.dataset.isRec === 'true';
-  if (!pid) { _touchPhotoEl = null; return; }
-  if (isRec) {
-    if (dx < 0) nextRecPhoto(pid);
-    else prevRecPhoto(pid);
-  } else {
-    if (dx < 0) nextPhoto(pid);
-    else prevPhoto(pid);
+  if (Math.abs(dx) < 35 || Math.abs(dy) > Math.abs(dx) * 0.8) { _touchPhotoEl = null; return; }
+
+  if (_touchPhotoEl.dataset.advisingMatchId) {
+    const mid = _touchPhotoEl.dataset.advisingMatchId;
+    if (dx < 0) nextAdvisingPhoto(mid); else prevAdvisingPhoto(mid);
+  } else if (_touchPhotoEl.dataset.profileId) {
+    const pid = parseInt(_touchPhotoEl.dataset.profileId);
+    if (dx < 0) nextPhoto(pid); else prevPhoto(pid);
   }
   _touchPhotoEl = null;
 }, { passive: true });
@@ -1948,27 +2199,30 @@ document.addEventListener('click', e => {
   const id     = el.dataset.id;
 
   switch (action) {
-    case 'select-dating':        selectMode('dating');          break;
-    case 'select-recommending':  selectMode('recommending');    break;
-    case 'toggle-mode':          toggleMode();                  break;
-    case 'like':                 likeProfile();                 break;
-    case 'pass':                 passProfile();                 break;
-    case 'next-photo':           nextPhoto(parseInt(id));       break;
-    case 'prev-photo':           prevPhoto(parseInt(id));       break;
-    case 'see-votes':            goToApproval(id);              break;
-    case 'keep-swiping':         keepSwiping();                 break;
-    case 'back':                 goToScreen('matches');         break;
-    case 'go-discovery':         goToScreen('discovery');       break;
-    case 'go-matches':           goToScreen('matches');         break;
-    case 'go-recommendations':   goToScreen('recommendations'); break;
-    case 'open-approval':        goToApproval(id);              break;
-    case 'simulate-vote':        simulateVote(id);              break;
-    case 'open-rec':             openRec(parseInt(id));         break;
-    case 'back-rec':             backFromRec();                 break;
-    case 'next-rec-photo':       nextRecPhoto(parseInt(id));    break;
-    case 'prev-rec-photo':       prevRecPhoto(parseInt(id));    break;
-    case 'rec-approve':          voteRec(parseInt(id), 'approved'); break;
-    case 'rec-reject':           voteRec(parseInt(id), 'rejected'); break;
+    case 'select-dating':          selectMode('dating');              break;
+    case 'select-recommending':    selectMode('recommending');        break;
+    case 'toggle-mode':            toggleMode();                      break;
+    case 'like':                   likeProfile();                     break;
+    case 'pass':                   passProfile();                     break;
+    case 'next-photo':             nextPhoto(parseInt(id));           break;
+    case 'prev-photo':             prevPhoto(parseInt(id));           break;
+    case 'see-votes':              goToApproval(id);                  break;
+    case 'keep-swiping':           keepSwiping();                     break;
+    case 'back':                   goToScreen('matches');             break;
+    case 'go-discovery':           goToScreen('discovery');           break;
+    case 'go-matches':             goToScreen('matches');             break;
+    case 'go-advising-friends':    goToScreen('advising-friends');    break;
+    case 'open-approval':          goToApproval(id);                  break;
+    case 'simulate-vote':          simulateVote(id);                  break;
+    case 'set-best-friend':        setBestFriend(parseInt(id));       break;
+    case 'open-advising-friend':   openAdvisingFriend(id);            break;
+    case 'open-advising-match':    openAdvisingMatch(id);             break;
+    case 'back-advising-matches':  backFromAdvisingMatches();         break;
+    case 'back-advising-detail':   backFromAdvisingDetail();          break;
+    case 'next-advising-photo':    nextAdvisingPhoto(id);             break;
+    case 'prev-advising-photo':    prevAdvisingPhoto(id);             break;
+    case 'advising-approve':       voteAdvisingMatch(id, 'approved'); break;
+    case 'advising-reject':        voteAdvisingMatch(id, 'rejected'); break;
     case 'chat-soon':
       alert('💬 Chat is coming soon!\n\nThis feature will be available once the full app is built.');
       break;
