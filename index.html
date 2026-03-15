@@ -11,25 +11,34 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --teal:        #1a7a7a;
-      --teal-mid:    #2ab5b5;
-      --teal-light:  #e8f4f4;
-      --teal-pale:   #f2fafa;
-      --white:       #ffffff;
-      --ink:         #1a1a1a;
-      --ink-soft:    #555555;
-      --ink-muted:   #999999;
-      --danger:      #c0392b;
-      --danger-light:#fdecea;
-      --gold:        #c9a96e;
-      --radius:      16px;
-      --shadow:      0 4px 24px rgba(0,0,0,0.10);
-      --shadow-sm:   0 2px 10px rgba(0,0,0,0.07);
+      /* — Teal — */
+      --teal:          #1a7a7a;
+      --teal-mid:      #2ab5b5;
+      --teal-light:    #cde8e8;
+      --teal-pale:     #e8f5f5;
+      /* — Beige / Tan — */
+      --beige:         #f5ede0;
+      --beige-mid:     #e4d2ba;
+      --beige-dark:    #cab899;
+      --beige-pale:    #faf5ee;
+      /* — Redwood Red accents — */
+      --redwood:       #7a3728;
+      --redwood-mid:   #a04a38;
+      --redwood-light: #f5e8e5;
+      /* — Ink (warm) — */
+      --ink:           #2a1f14;
+      --ink-soft:      #5c4a38;
+      --ink-muted:     #9a8878;
+      /* — Utility — */
+      --gold:          #c9a96e;
+      --radius:        16px;
+      --shadow:        0 4px 24px rgba(42,31,20,0.10);
+      --shadow-sm:     0 2px 10px rgba(42,31,20,0.07);
     }
 
     html, body {
       height: 100%;
-      background: #f0f5f5;
+      background: #ddd0b8;
     }
 
     body {
@@ -44,10 +53,10 @@
       height: 100dvh;
       display: flex;
       flex-direction: column;
-      background: var(--white);
+      background: var(--beige);
       position: relative;
       overflow: hidden;
-      box-shadow: 0 0 40px rgba(0,0,0,0.12);
+      box-shadow: 0 0 40px rgba(0,0,0,0.18);
     }
 
     /* ── Header ── */
@@ -56,8 +65,8 @@
       align-items: center;
       justify-content: center;
       padding: 16px 20px 12px;
-      background: var(--white);
-      border-bottom: 1px solid var(--teal-light);
+      background: var(--beige);
+      border-bottom: 1px solid var(--beige-mid);
       position: relative;
       flex-shrink: 0;
       z-index: 10;
@@ -80,12 +89,6 @@
       color: var(--ink);
       letter-spacing: 0.02em;
     }
-    .app-header .header-icon {
-      position: absolute;
-      right: 16px;
-      font-size: 20px;
-      color: var(--teal-mid);
-    }
 
     .wordmark {
       font-family: 'Playfair Display', Georgia, serif;
@@ -94,6 +97,30 @@
       color: var(--teal);
       letter-spacing: 0.08em;
       text-transform: uppercase;
+    }
+
+    /* Mode Toggle Switch */
+    .mode-toggle {
+      position: absolute;
+      right: 12px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      background: var(--beige-mid);
+      border: none;
+      border-radius: 20px;
+      padding: 5px 10px 5px 8px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .mode-toggle:active { background: var(--beige-dark); }
+    .mode-toggle .toggle-icon { font-size: 15px; line-height: 1; }
+    .mode-toggle .toggle-label {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--ink-soft);
     }
 
     /* ── Screen ── */
@@ -107,8 +134,8 @@
     /* ── Bottom Nav ── */
     .bottom-nav {
       display: flex;
-      border-top: 1px solid var(--teal-light);
-      background: var(--white);
+      border-top: 1px solid var(--beige-mid);
+      background: var(--beige);
       flex-shrink: 0;
       z-index: 20;
     }
@@ -124,14 +151,101 @@
       cursor: pointer;
       color: var(--ink-muted);
       font-family: 'Inter', sans-serif;
-      font-size: 11px;
+      font-size: 10px;
       font-weight: 500;
       letter-spacing: 0.04em;
       text-transform: uppercase;
       transition: color 0.2s;
+      position: relative;
     }
     .nav-tab .nav-icon { font-size: 20px; }
     .nav-tab.active { color: var(--teal); }
+    .nav-badge {
+      position: absolute;
+      top: 7px;
+      right: calc(50% - 22px);
+      background: var(--redwood-mid);
+      color: white;
+      border-radius: 50%;
+      width: 16px;
+      height: 16px;
+      font-size: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+    }
+
+    /* ════════════════════════════
+       ONBOARDING SCREEN
+    ════════════════════════════ */
+    .onboarding-screen {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 48px 28px 60px;
+      min-height: 100%;
+    }
+    .onboarding-logo {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 36px;
+      font-weight: 700;
+      color: var(--teal);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .onboarding-tagline {
+      font-size: 13px;
+      color: var(--ink-muted);
+      letter-spacing: 0.04em;
+      margin-bottom: 48px;
+      text-align: center;
+    }
+    .onboarding-q {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 22px;
+      font-weight: 600;
+      color: var(--ink);
+      text-align: center;
+      margin-bottom: 8px;
+      line-height: 1.35;
+    }
+    .onboarding-sub {
+      font-size: 13px;
+      color: var(--ink-muted);
+      text-align: center;
+      margin-bottom: 36px;
+    }
+    .mode-cards {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .mode-card {
+      background: var(--beige-pale);
+      border: 2px solid var(--beige-mid);
+      border-radius: 20px;
+      padding: 26px 22px;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.2s;
+    }
+    .mode-card:active { transform: scale(0.97); border-color: var(--teal); }
+    .mode-card-icon { font-size: 38px; margin-bottom: 12px; }
+    .mode-card h3 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 19px;
+      font-weight: 700;
+      color: var(--ink);
+      margin-bottom: 6px;
+    }
+    .mode-card p { font-size: 13px; color: var(--ink-muted); line-height: 1.5; }
+    .mode-card.dating-card  { border-color: var(--teal-light); }
+    .mode-card.advise-card  { border-color: var(--beige-dark); }
+    .mode-card.dating-card:active  { border-color: var(--teal); }
+    .mode-card.advise-card:active  { border-color: var(--redwood); }
 
     /* ════════════════════════════
        DISCOVERY SCREEN
@@ -141,7 +255,7 @@
     }
 
     .profile-card {
-      background: var(--white);
+      background: var(--beige-pale);
       border-radius: var(--radius);
       overflow: hidden;
       box-shadow: var(--shadow);
@@ -178,16 +292,14 @@
       background: rgba(255,255,255,0.5);
       transition: background 0.2s;
     }
-    .photo-dot.active { background: var(--white); }
+    .photo-dot.active { background: white; }
 
     .photo-overlay {
       position: absolute;
       inset: 0;
       display: flex;
     }
-    .photo-tap-left, .photo-tap-right {
-      flex: 1;
-    }
+    .photo-tap-left, .photo-tap-right { flex: 1; }
 
     .profile-name-overlay {
       position: absolute;
@@ -201,7 +313,7 @@
       font-family: 'Playfair Display', Georgia, serif;
       font-size: 28px;
       font-weight: 700;
-      color: var(--white);
+      color: white;
       text-shadow: 0 1px 4px rgba(0,0,0,0.3);
     }
     .profile-name-overlay .profile-city {
@@ -213,9 +325,7 @@
       gap: 4px;
     }
 
-    .profile-body {
-      padding: 20px;
-    }
+    .profile-body { padding: 20px; }
     .profile-bio {
       font-size: 15px;
       line-height: 1.65;
@@ -254,18 +364,18 @@
       margin-top: 16px;
     }
     .tag {
-      background: var(--teal-light);
-      color: var(--teal);
+      background: var(--beige-mid);
+      color: var(--ink-soft);
       padding: 5px 12px;
       border-radius: 20px;
       font-size: 12px;
       font-weight: 500;
     }
 
-    /* Action Buttons */
+    /* Action Buttons (heart/X) */
     .action-buttons {
       position: fixed;
-      bottom: 64px;
+      bottom: 68px;
       left: 50%;
       transform: translateX(-50%);
       display: flex;
@@ -274,35 +384,29 @@
       z-index: 15;
     }
     .btn-pass {
-      width: 60px;
-      height: 60px;
+      width: 60px; height: 60px;
       border-radius: 50%;
-      background: var(--white);
-      border: 2px solid var(--danger);
-      color: var(--danger);
+      background: var(--beige);
+      border: 2px solid var(--redwood);
+      color: var(--redwood);
       font-size: 22px;
       cursor: pointer;
       box-shadow: var(--shadow-sm);
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      display: flex; align-items: center; justify-content: center;
       transition: transform 0.15s, background 0.15s;
     }
-    .btn-pass:active { transform: scale(0.93); background: var(--danger-light); }
+    .btn-pass:active { transform: scale(0.93); background: var(--redwood-light); }
 
     .btn-like {
-      width: 68px;
-      height: 68px;
+      width: 68px; height: 68px;
       border-radius: 50%;
       background: var(--teal);
       border: none;
-      color: var(--white);
+      color: white;
       font-size: 26px;
       cursor: pointer;
       box-shadow: 0 4px 16px rgba(26,122,122,0.35);
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      display: flex; align-items: center; justify-content: center;
       transition: transform 0.15s, background 0.15s;
     }
     .btn-like:active { transform: scale(0.93); background: var(--teal-mid); }
@@ -329,6 +433,11 @@
       align-items: center;
       padding: 40px 24px 100px;
       text-align: center;
+      animation: matchReveal 0.4s ease-out;
+    }
+    @keyframes matchReveal {
+      from { opacity: 0; transform: scale(0.96); }
+      to   { opacity: 1; transform: scale(1); }
     }
 
     .match-burst {
@@ -348,11 +457,10 @@
       50% { transform: scale(1.08); opacity: 0.7; }
     }
     .match-photo {
-      width: 130px;
-      height: 130px;
+      width: 130px; height: 130px;
       border-radius: 50%;
       object-fit: cover;
-      border: 4px solid var(--white);
+      border: 4px solid var(--beige);
       box-shadow: 0 0 0 3px var(--teal-mid), var(--shadow);
     }
 
@@ -402,7 +510,7 @@
       width: 100%;
       padding: 16px;
       background: var(--teal);
-      color: var(--white);
+      color: white;
       border: none;
       border-radius: var(--radius);
       font-family: 'Playfair Display', Georgia, serif;
@@ -434,9 +542,7 @@
     /* ════════════════════════════
        FRIEND APPROVAL SCREEN
     ════════════════════════════ */
-    .approval-screen {
-      padding: 20px 16px 100px;
-    }
+    .approval-screen { padding: 20px 16px 100px; }
 
     .approval-summary {
       display: flex;
@@ -449,8 +555,7 @@
       border: 1px solid var(--teal-light);
     }
     .approval-summary img {
-      width: 68px;
-      height: 68px;
+      width: 68px; height: 68px;
       border-radius: 50%;
       object-fit: cover;
       flex-shrink: 0;
@@ -463,10 +568,7 @@
       font-weight: 600;
       margin-bottom: 8px;
     }
-    .vote-stats {
-      display: flex;
-      gap: 10px;
-    }
+    .vote-stats { display: flex; gap: 10px; }
     .vote-stat {
       font-size: 13px;
       display: flex;
@@ -475,7 +577,7 @@
       font-weight: 500;
     }
     .vote-stat.approved { color: var(--teal); }
-    .vote-stat.rejected { color: var(--danger); }
+    .vote-stat.rejected { color: var(--redwood); }
     .vote-stat.pending  { color: var(--ink-muted); }
 
     .progress-section { margin-bottom: 20px; }
@@ -489,7 +591,7 @@
     }
     .progress-track {
       height: 8px;
-      background: var(--teal-light);
+      background: var(--beige-mid);
       border-radius: 4px;
       overflow: hidden;
     }
@@ -506,12 +608,11 @@
       align-items: center;
       gap: 12px;
       padding: 13px 0;
-      border-bottom: 1px solid var(--teal-light);
+      border-bottom: 1px solid var(--beige-mid);
     }
     .friend-item:last-child { border-bottom: none; }
     .friend-avatar {
-      width: 46px;
-      height: 46px;
+      width: 46px; height: 46px;
       border-radius: 50%;
       object-fit: cover;
       flex-shrink: 0;
@@ -531,13 +632,13 @@
       text-transform: uppercase;
     }
     .vote-badge.approved { background: var(--teal-light); color: var(--teal); }
-    .vote-badge.rejected { background: var(--danger-light); color: var(--danger); }
-    .vote-badge.pending  { background: #f0f0f0; color: var(--ink-muted); }
+    .vote-badge.rejected { background: var(--redwood-light); color: var(--redwood); }
+    .vote-badge.pending  { background: var(--beige-mid); color: var(--ink-muted); }
 
     .simulate-btn {
       width: 100%;
       padding: 14px;
-      background: var(--white);
+      background: var(--beige);
       border: 1.5px dashed var(--teal-mid);
       border-radius: var(--radius);
       color: var(--teal);
@@ -561,7 +662,7 @@
       border-radius: var(--radius);
       padding: 24px;
       text-align: center;
-      color: var(--white);
+      color: white;
       margin-bottom: 16px;
     }
     .unlocked-banner .banner-icon { font-size: 32px; margin-bottom: 10px; }
@@ -573,7 +674,7 @@
     }
     .unlocked-banner p { font-size: 13px; opacity: 0.88; margin-bottom: 16px; }
     .btn-chat {
-      background: var(--white);
+      background: var(--beige);
       color: var(--teal);
       border: none;
       padding: 13px 28px;
@@ -589,9 +690,7 @@
     /* ════════════════════════════
        MATCHES LIST SCREEN
     ════════════════════════════ */
-    .matches-screen {
-      padding: 20px 16px 100px;
-    }
+    .matches-screen { padding: 20px 16px 100px; }
     .matches-screen-title {
       font-family: 'Playfair Display', Georgia, serif;
       font-size: 26px;
@@ -611,17 +710,16 @@
       gap: 14px;
       padding: 14px;
       border-radius: var(--radius);
-      background: var(--white);
+      background: var(--beige-pale);
       box-shadow: var(--shadow-sm);
       margin-bottom: 10px;
       cursor: pointer;
       transition: transform 0.15s;
-      border: 1px solid var(--teal-light);
+      border: 1px solid var(--beige-mid);
     }
     .match-list-item:active { transform: scale(0.98); }
     .match-list-img {
-      width: 58px;
-      height: 58px;
+      width: 58px; height: 58px;
       border-radius: 50%;
       object-fit: cover;
       flex-shrink: 0;
@@ -634,16 +732,13 @@
       color: var(--ink);
       margin-bottom: 3px;
     }
-    .match-list-status {
-      font-size: 12px;
-      color: var(--ink-muted);
-    }
+    .match-list-status { font-size: 12px; color: var(--ink-muted); }
     .match-list-status.unlocked-status { color: var(--teal); font-weight: 500; }
     .match-list-action { flex-shrink: 0; }
     .lock-icon { font-size: 20px; color: var(--ink-muted); }
     .btn-chat-small {
       background: var(--teal);
-      color: var(--white);
+      color: white;
       border: none;
       padding: 8px 16px;
       border-radius: 20px;
@@ -666,6 +761,158 @@
     .section-label:first-child { margin-top: 0; }
 
     /* ════════════════════════════
+       RECOMMENDATIONS SCREEN
+    ════════════════════════════ */
+    .rec-screen { padding: 20px 16px 100px; }
+
+    .rec-screen-title {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--ink);
+      margin-bottom: 4px;
+      line-height: 1.3;
+    }
+    .rec-screen-sub {
+      font-size: 13px;
+      color: var(--ink-muted);
+      margin-bottom: 6px;
+    }
+    .rec-vote-note {
+      font-size: 12px;
+      color: var(--teal);
+      background: var(--teal-pale);
+      border: 1px solid var(--teal-light);
+      border-radius: 10px;
+      padding: 8px 12px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* Rec list item */
+    .rec-list-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px;
+      border-radius: var(--radius);
+      background: var(--beige-pale);
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 10px;
+      cursor: pointer;
+      transition: transform 0.15s, opacity 0.2s;
+      border: 1px solid var(--beige-mid);
+    }
+    .rec-list-item:active { transform: scale(0.98); }
+    .rec-list-item.voted {
+      opacity: 0.58;
+      background: var(--beige);
+    }
+    .rec-list-img {
+      width: 58px; height: 58px;
+      border-radius: 50%;
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+    .rec-list-info { flex: 1; min-width: 0; }
+    .rec-list-name {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 17px;
+      font-weight: 600;
+      color: var(--ink);
+      margin-bottom: 2px;
+    }
+    .rec-list-item.voted .rec-list-name {
+      font-weight: 300;
+      color: var(--ink-muted);
+    }
+    .rec-list-sub { font-size: 12px; color: var(--ink-muted); }
+    .rec-vote-chip {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 20px;
+      flex-shrink: 0;
+    }
+    .rec-vote-chip.approved {
+      background: var(--teal-light);
+      color: var(--teal);
+    }
+    .rec-vote-chip.rejected {
+      background: var(--redwood-light);
+      color: var(--redwood);
+    }
+    .rec-new-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--redwood-mid);
+      flex-shrink: 0;
+      margin-right: 6px;
+    }
+
+    /* Rec detail view */
+    .rec-detail-screen { padding: 16px 16px 100px; }
+
+    .rec-action-row {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 28px;
+      padding: 20px 0 8px;
+    }
+    .btn-thumb {
+      border-radius: 50%;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.15s, background 0.15s;
+      font-size: 26px;
+    }
+    .btn-thumb-down {
+      width: 60px; height: 60px;
+      background: var(--beige);
+      border: 2px solid var(--redwood);
+      color: var(--redwood);
+    }
+    .btn-thumb-down:active { transform: scale(0.92); background: var(--redwood-light); }
+
+    .btn-thumb-up {
+      width: 70px; height: 70px;
+      background: var(--teal);
+      color: white;
+      font-size: 28px;
+      box-shadow: 0 4px 16px rgba(26,122,122,0.35);
+    }
+    .btn-thumb-up:active { transform: scale(0.92); background: var(--teal-mid); }
+
+    .voted-overlay-banner {
+      border-radius: var(--radius);
+      padding: 16px 20px;
+      text-align: center;
+      margin: 12px 0;
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 17px;
+      font-weight: 600;
+    }
+    .voted-overlay-banner.approved {
+      background: var(--teal-pale);
+      border: 1.5px solid var(--teal-light);
+      color: var(--teal);
+    }
+    .voted-overlay-banner.rejected {
+      background: var(--redwood-light);
+      border: 1.5px solid #eab8b0;
+      color: var(--redwood);
+    }
+
+    /* ════════════════════════════
        ANIMATIONS
     ════════════════════════════ */
     .screen-enter {
@@ -674,14 +921,6 @@
     @keyframes fadeSlideIn {
       from { opacity: 0; transform: translateY(12px); }
       to   { opacity: 1; transform: translateY(0); }
-    }
-
-    .match-screen {
-      animation: matchReveal 0.4s ease-out;
-    }
-    @keyframes matchReveal {
-      from { opacity: 0; transform: scale(0.96); }
-      to   { opacity: 1; transform: scale(1); }
     }
   </style>
 </head>
@@ -702,8 +941,10 @@ const PROFILES = [
     age: 28,
     city: "New York",
     photos: [
-      "https://picsum.photos/seed/soph1/400/500",
-      "https://picsum.photos/seed/soph2/400/500",
+      "https://randomuser.me/api/portraits/women/12.jpg",
+      "https://randomuser.me/api/portraits/women/25.jpg",
+      "https://randomuser.me/api/portraits/women/38.jpg",
+      "https://randomuser.me/api/portraits/women/51.jpg",
     ],
     bio: "Art director by day, amateur chef by night. I believe a good meal is the finest form of intimacy.",
     prompts: [
@@ -720,8 +961,10 @@ const PROFILES = [
     age: 26,
     city: "San Francisco",
     photos: [
-      "https://picsum.photos/seed/priya1/400/500",
-      "https://picsum.photos/seed/priya2/400/500",
+      "https://randomuser.me/api/portraits/women/14.jpg",
+      "https://randomuser.me/api/portraits/women/27.jpg",
+      "https://randomuser.me/api/portraits/women/43.jpg",
+      "https://randomuser.me/api/portraits/women/62.jpg",
     ],
     bio: "Biotech researcher who unwinds with pottery and very long hikes. I'm told I'm an excellent listener.",
     prompts: [
@@ -737,8 +980,10 @@ const PROFILES = [
     age: 30,
     city: "Chicago",
     photos: [
-      "https://picsum.photos/seed/mara1/400/500",
-      "https://picsum.photos/seed/mara2/400/500",
+      "https://randomuser.me/api/portraits/women/6.jpg",
+      "https://randomuser.me/api/portraits/women/19.jpg",
+      "https://randomuser.me/api/portraits/women/35.jpg",
+      "https://randomuser.me/api/portraits/women/74.jpg",
     ],
     bio: "Jazz pianist, vintage furniture hunter, connoisseur of hole-in-the-wall restaurants. Chronically over-caffeinated.",
     prompts: [
@@ -755,8 +1000,10 @@ const PROFILES = [
     age: 27,
     city: "Austin",
     photos: [
-      "https://picsum.photos/seed/elena1/400/500",
-      "https://picsum.photos/seed/elena2/400/500",
+      "https://randomuser.me/api/portraits/women/8.jpg",
+      "https://randomuser.me/api/portraits/women/22.jpg",
+      "https://randomuser.me/api/portraits/women/47.jpg",
+      "https://randomuser.me/api/portraits/women/83.jpg",
     ],
     bio: "Environmental lawyer who moonlights as a terrible but enthusiastic rock climber. The outdoors raised me.",
     prompts: [
@@ -772,8 +1019,10 @@ const PROFILES = [
     age: 29,
     city: "Brooklyn",
     photos: [
-      "https://picsum.photos/seed/zoeb1/400/500",
-      "https://picsum.photos/seed/zoeb2/400/500",
+      "https://randomuser.me/api/portraits/women/3.jpg",
+      "https://randomuser.me/api/portraits/women/31.jpg",
+      "https://randomuser.me/api/portraits/women/55.jpg",
+      "https://randomuser.me/api/portraits/women/79.jpg",
     ],
     bio: "Documentary filmmaker. I find ordinary lives extraordinary. I will absolutely ask you odd questions on a first date.",
     prompts: [
@@ -790,8 +1039,10 @@ const PROFILES = [
     age: 25,
     city: "Los Angeles",
     photos: [
-      "https://picsum.photos/seed/nadia1/400/500",
-      "https://picsum.photos/seed/nadia2/400/500",
+      "https://randomuser.me/api/portraits/women/16.jpg",
+      "https://randomuser.me/api/portraits/women/29.jpg",
+      "https://randomuser.me/api/portraits/women/68.jpg",
+      "https://randomuser.me/api/portraits/women/91.jpg",
     ],
     bio: "Architect with a weakness for brutalist buildings and very good pastries. Mornings are sacred to me.",
     prompts: [
@@ -807,8 +1058,10 @@ const PROFILES = [
     age: 31,
     city: "Boston",
     photos: [
-      "https://picsum.photos/seed/claire1/400/500",
-      "https://picsum.photos/seed/claire2/400/500",
+      "https://randomuser.me/api/portraits/women/11.jpg",
+      "https://randomuser.me/api/portraits/women/44.jpg",
+      "https://randomuser.me/api/portraits/women/72.jpg",
+      "https://randomuser.me/api/portraits/women/88.jpg",
     ],
     bio: "Pediatric nurse, marathon runner, recovering perfectionist. I will out-walk anyone on a city trip.",
     prompts: [
@@ -824,8 +1077,10 @@ const PROFILES = [
     age: 28,
     city: "Seattle",
     photos: [
-      "https://picsum.photos/seed/ines1/400/500",
-      "https://picsum.photos/seed/ines2/400/500",
+      "https://randomuser.me/api/portraits/women/9.jpg",
+      "https://randomuser.me/api/portraits/women/37.jpg",
+      "https://randomuser.me/api/portraits/women/65.jpg",
+      "https://randomuser.me/api/portraits/women/92.jpg",
     ],
     bio: "Translator (French, Portuguese, Spanish). I collect idioms that don't survive translation. It says everything.",
     prompts: [
@@ -838,6 +1093,118 @@ const PROFILES = [
   }
 ];
 
+// Profiles shown in the Recommendations tab (friend's matches / suggested for you)
+const REC_PROFILES = [
+  {
+    id: 101,
+    name: "Aria",
+    age: 27,
+    city: "Denver",
+    photos: [
+      "https://randomuser.me/api/portraits/women/45.jpg",
+      "https://randomuser.me/api/portraits/women/58.jpg",
+      "https://randomuser.me/api/portraits/women/71.jpg",
+      "https://randomuser.me/api/portraits/women/84.jpg",
+    ],
+    bio: "Yoga instructor and part-time astronomer. I navigate by stars and intuition — usually in that order.",
+    prompts: [
+      { q: "My morning ritual is", a: "Tea before words. No exceptions." },
+      { q: "I'll geek out with you about", a: "The fact that we're all made of stardust." },
+    ],
+    tags: ["Yoga", "Astronomy", "Hiking", "Meditation"],
+  },
+  {
+    id: 102,
+    name: "Leila",
+    age: 29,
+    city: "Miami",
+    photos: [
+      "https://randomuser.me/api/portraits/women/50.jpg",
+      "https://randomuser.me/api/portraits/women/63.jpg",
+      "https://randomuser.me/api/portraits/women/76.jpg",
+      "https://randomuser.me/api/portraits/women/89.jpg",
+    ],
+    bio: "Marine biologist who salsa dances on weekends. I'm as comfortable in a reef as I am on a dance floor.",
+    prompts: [
+      { q: "Best thing about me", a: "I will never make you feel boring for caring." },
+      { q: "A weird talent I have", a: "Identifying fish species from terrible underwater photos." },
+    ],
+    tags: ["Marine Biology", "Dancing", "Diving", "Beach"],
+  },
+  {
+    id: 103,
+    name: "Tara",
+    age: 25,
+    city: "Portland",
+    photos: [
+      "https://randomuser.me/api/portraits/women/53.jpg",
+      "https://randomuser.me/api/portraits/women/66.jpg",
+      "https://randomuser.me/api/portraits/women/80.jpg",
+      "https://randomuser.me/api/portraits/women/93.jpg",
+    ],
+    bio: "Graphic novelist, dog mom, avid thrifter. My apartment looks like a gallery that also has a dog bed in it.",
+    prompts: [
+      { q: "I'm proudest of", a: "My graphic novel got reviewed in a real magazine once." },
+      { q: "Comfort for me is", a: "Rainy day, a pile of graphic novels, my dog on my feet." },
+    ],
+    tags: ["Comics", "Art", "Dogs", "Thrifting"],
+  },
+  {
+    id: 104,
+    name: "Maya",
+    age: 31,
+    city: "Nashville",
+    photos: [
+      "https://randomuser.me/api/portraits/women/56.jpg",
+      "https://randomuser.me/api/portraits/women/69.jpg",
+      "https://randomuser.me/api/portraits/women/82.jpg",
+      "https://randomuser.me/api/portraits/women/96.jpg",
+    ],
+    bio: "Singer-songwriter who also works in data science. The left and right sides of my brain are in constant negotiation.",
+    prompts: [
+      { q: "Something I made", a: "An album about statistical models. It's better than it sounds." },
+      { q: "I value in a person", a: "The ability to be deeply silly and deeply serious." },
+    ],
+    tags: ["Music", "Data", "Songwriting", "Coffee"],
+  },
+  {
+    id: 105,
+    name: "Jules",
+    age: 28,
+    city: "Phoenix",
+    photos: [
+      "https://randomuser.me/api/portraits/women/59.jpg",
+      "https://randomuser.me/api/portraits/women/72.jpg",
+      "https://randomuser.me/api/portraits/women/85.jpg",
+      "https://randomuser.me/api/portraits/women/98.jpg",
+    ],
+    bio: "Wilderness guide in the summer, ceramics teacher in the winter. I live life seasonally and fully.",
+    prompts: [
+      { q: "My idea of adventure", a: "Trail you've never heard of. No signal. Perfect." },
+      { q: "I'm trying to", a: "Make my pottery less lopsided. Slowly succeeding." },
+    ],
+    tags: ["Outdoors", "Ceramics", "Guiding", "Stargazing"],
+  },
+  {
+    id: 106,
+    name: "Cora",
+    age: 26,
+    city: "New Orleans",
+    photos: [
+      "https://randomuser.me/api/portraits/women/48.jpg",
+      "https://randomuser.me/api/portraits/women/61.jpg",
+      "https://randomuser.me/api/portraits/women/78.jpg",
+      "https://randomuser.me/api/portraits/women/90.jpg",
+    ],
+    bio: "Pastry chef and occasional jazz singer. I believe in butter, low lighting, and a good story.",
+    prompts: [
+      { q: "My superpower is", a: "Making you feel like dinner was the whole event." },
+      { q: "I find beauty in", a: "Old menus. They're like little time capsules." },
+    ],
+    tags: ["Baking", "Jazz", "Food", "History"],
+  },
+];
+
 const FRIEND_NAMES = ["Jamie", "Alex", "Morgan", "Taylor", "Jordan"];
 const FRIEND_SEEDS = ["frnd1", "frnd2", "frnd3", "frnd4", "frnd5"];
 
@@ -845,7 +1212,7 @@ function makeFriends() {
   return FRIEND_NAMES.map((name, i) => ({
     id: i + 1,
     name,
-    avatar: `https://picsum.photos/seed/${FRIEND_SEEDS[i]}/60/60`,
+    avatar: `https://randomuser.me/api/portraits/men/${20 + i * 7}.jpg`,
     vote: 'pending'
   }));
 }
@@ -855,48 +1222,54 @@ function makeFriends() {
 // ══════════════════════════════════════════════
 
 const State = {
-  screen: 'discovery',       // 'discovery' | 'match' | 'approval' | 'matches'
+  screen: 'onboarding',      // 'onboarding'|'discovery'|'match'|'approval'|'matches'|'recommendations'|'rec-detail'
+  appMode: 'dating',         // 'dating' | 'recommending'
   profileIndex: 0,
   photoIndex: {},            // profileId -> current photo index
-  matches: [],               // array of match objects
+  matches: [],
   activeMatchId: null,
-  newMatchId: null           // for match reveal screen
+  newMatchId: null,
+  recVotes: {},              // recProfileId -> 'approved' | 'rejected'
+  recPhotoIndex: {},         // recProfileId -> current photo index
+  activeRecId: null,
 };
 
-function currentProfile() {
-  return PROFILES[State.profileIndex] || null;
-}
-
-function getMatch(id) {
-  return State.matches.find(m => m.matchId === id);
-}
-
+function currentProfile() { return PROFILES[State.profileIndex] || null; }
+function getMatch(id) { return State.matches.find(m => m.matchId === id); }
 function isUnlocked(match) {
   const approved = match.friends.filter(f => f.vote === 'approved').length;
   const total    = match.friends.filter(f => f.vote !== 'pending').length;
   if (approved < 3) return false;
-  if (total < 5)    return true;
+  if (total < 5) return true;
   return approved > total / 2;
 }
-
-function getPhotoIndex(profileId) {
-  return State.photoIndex[profileId] || 0;
-}
+function getPhotoIndex(profileId) { return State.photoIndex[profileId] || 0; }
+function getRecPhotoIndex(id) { return State.recPhotoIndex[id] || 0; }
+function getRecVote(id) { return State.recVotes[id] || null; }
+function activeRec() { return REC_PROFILES.find(p => p.id === State.activeRecId); }
 
 // ══════════════════════════════════════════════
 // ACTIONS
 // ══════════════════════════════════════════════
+
+function selectMode(mode) {
+  State.appMode = mode;
+  State.screen = mode === 'recommending' ? 'recommendations' : 'discovery';
+  render();
+}
+
+function toggleMode() {
+  State.appMode = State.appMode === 'dating' ? 'recommending' : 'dating';
+  State.screen = State.appMode === 'recommending' ? 'recommendations' : 'discovery';
+  render();
+}
 
 function likeProfile() {
   const p = currentProfile();
   if (!p) return;
   if (p.likedYou) {
     const matchId = 'match_' + p.id;
-    State.matches.push({
-      matchId,
-      profile: p,
-      friends: makeFriends()
-    });
+    State.matches.push({ matchId, profile: p, friends: makeFriends() });
     State.newMatchId = matchId;
     State.screen = 'match';
   } else {
@@ -905,27 +1278,10 @@ function likeProfile() {
   render();
 }
 
-function passProfile() {
-  State.profileIndex++;
-  render();
-}
-
-function goToScreen(s) {
-  State.screen = s;
-  render();
-}
-
-function goToApproval(matchId) {
-  State.activeMatchId = matchId;
-  State.screen = 'approval';
-  render();
-}
-
-function keepSwiping() {
-  State.profileIndex++;
-  State.screen = 'discovery';
-  render();
-}
+function passProfile() { State.profileIndex++; render(); }
+function goToScreen(s) { State.screen = s; render(); }
+function goToApproval(matchId) { State.activeMatchId = matchId; State.screen = 'approval'; render(); }
+function keepSwiping() { State.profileIndex++; State.screen = 'discovery'; render(); }
 
 function simulateVote(matchId) {
   const match = getMatch(matchId);
@@ -944,7 +1300,6 @@ function nextPhoto(profileId) {
   State.photoIndex[profileId] = (cur + 1) % profile.photos.length;
   render();
 }
-
 function prevPhoto(profileId) {
   const profile = PROFILES.find(p => p.id === profileId);
   if (!profile) return;
@@ -953,19 +1308,55 @@ function prevPhoto(profileId) {
   render();
 }
 
+function openRec(recId) { State.activeRecId = recId; State.screen = 'rec-detail'; render(); }
+function nextRecPhoto(recId) {
+  const p = REC_PROFILES.find(r => r.id === recId);
+  if (!p) return;
+  const cur = getRecPhotoIndex(recId);
+  State.recPhotoIndex[recId] = (cur + 1) % p.photos.length;
+  render();
+}
+function prevRecPhoto(recId) {
+  const p = REC_PROFILES.find(r => r.id === recId);
+  if (!p) return;
+  const cur = getRecPhotoIndex(recId);
+  State.recPhotoIndex[recId] = (cur - 1 + p.photos.length) % p.photos.length;
+  render();
+}
+function voteRec(recId, decision) {
+  State.recVotes[recId] = decision;
+  render();
+}
+function backFromRec() { State.screen = 'recommendations'; render(); }
+
 // ══════════════════════════════════════════════
 // RENDER
 // ══════════════════════════════════════════════
 
 function render() {
   const app = document.getElementById('app');
+
+  if (State.screen === 'onboarding') {
+    app.innerHTML = renderOnboarding();
+    return;
+  }
+
+  const modeIcon   = State.appMode === 'recommending' ? '👥' : '💑';
+  const modeLabel  = State.appMode === 'recommending' ? 'Advising' : 'Dating';
+
   let headerHTML = '';
   let screenHTML = '';
   let navHTML    = renderNav();
 
   switch (State.screen) {
     case 'discovery': {
-      headerHTML = `<div class="app-header"><span class="wordmark">Arranged</span></div>`;
+      headerHTML = `<div class="app-header">
+        <span class="wordmark">Arranged</span>
+        <button class="mode-toggle" data-action="toggle-mode">
+          <span class="toggle-icon">${modeIcon}</span>
+          <span class="toggle-label">${modeLabel}</span>
+        </button>
+      </div>`;
       screenHTML = `<div class="screen discovery-screen screen-enter">${renderDiscovery()}</div>`;
       break;
     }
@@ -986,8 +1377,38 @@ function render() {
       break;
     }
     case 'matches': {
-      headerHTML = `<div class="app-header"><span class="wordmark">Arranged</span></div>`;
+      headerHTML = `<div class="app-header">
+        <span class="wordmark">Arranged</span>
+        <button class="mode-toggle" data-action="toggle-mode">
+          <span class="toggle-icon">${modeIcon}</span>
+          <span class="toggle-label">${modeLabel}</span>
+        </button>
+      </div>`;
       screenHTML = `<div class="screen screen-enter">${renderMatchesList()}</div>`;
+      break;
+    }
+    case 'recommendations': {
+      const recTitle = State.appMode === 'recommending'
+        ? "Your Friends' New Matches"
+        : "Recommended for You";
+      headerHTML = `<div class="app-header">
+        <h2 style="font-size:16px">${recTitle}</h2>
+        <button class="mode-toggle" data-action="toggle-mode">
+          <span class="toggle-icon">${modeIcon}</span>
+          <span class="toggle-label">${modeLabel}</span>
+        </button>
+      </div>`;
+      screenHTML = `<div class="screen screen-enter">${renderRecommendations()}</div>`;
+      break;
+    }
+    case 'rec-detail': {
+      const rec = activeRec();
+      const name = rec ? rec.name : '';
+      headerHTML = `<div class="app-header">
+        <button class="back-btn" data-action="back-rec">&#8592;</button>
+        <h2>${name}</h2>
+      </div>`;
+      screenHTML = `<div class="screen screen-enter">${renderRecDetail()}</div>`;
       break;
     }
   }
@@ -995,9 +1416,42 @@ function render() {
   app.innerHTML = headerHTML + screenHTML + navHTML;
 }
 
+/* ── Onboarding ── */
+function renderOnboarding() {
+  return `
+    <div class="app-shell" style="background:var(--beige)">
+      <div class="screen">
+        <div class="onboarding-screen">
+          <div class="onboarding-logo">Arranged</div>
+          <p class="onboarding-tagline">Love, with a little help from everyone.</p>
+
+          <p class="onboarding-q">How are you using Arranged today?</p>
+          <p class="onboarding-sub">You can always switch modes later from the top right.</p>
+
+          <div class="mode-cards">
+            <div class="mode-card dating-card" data-action="select-dating">
+              <div class="mode-card-icon">💑</div>
+              <h3>I'm Dating</h3>
+              <p>Swipe on profiles and let your friends weigh in before you chat.</p>
+            </div>
+            <div class="mode-card advise-card" data-action="select-recommending">
+              <div class="mode-card-icon">👥</div>
+              <h3>I'm Advising a Friend</h3>
+              <p>Help a friend find their match — review their potential connections and cast your vote.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>`;
+}
+
+/* ── Nav ── */
 function renderNav() {
-  const dActive = State.screen === 'discovery' || State.screen === 'match' ? 'active' : '';
-  const mActive = State.screen === 'matches' || State.screen === 'approval' ? 'active' : '';
+  const dActive   = State.screen === 'discovery' || State.screen === 'match' ? 'active' : '';
+  const mActive   = State.screen === 'matches'   || State.screen === 'approval' ? 'active' : '';
+  const rActive   = State.screen === 'recommendations' || State.screen === 'rec-detail' ? 'active' : '';
+  const unvoted   = REC_PROFILES.filter(p => !getRecVote(p.id)).length;
+
   return `
     <nav class="bottom-nav">
       <button class="nav-tab ${dActive}" data-action="go-discovery">
@@ -1007,11 +1461,17 @@ function renderNav() {
       <button class="nav-tab ${mActive}" data-action="go-matches">
         <span class="nav-icon">♡</span>
         Matches
-        ${State.matches.length > 0 ? `<span style="position:absolute;top:8px;right:calc(50% - 28px);background:var(--teal-mid);color:white;border-radius:50%;width:16px;height:16px;font-size:10px;display:flex;align-items:center;justify-content:center;font-weight:700;">${State.matches.length}</span>` : ''}
+        ${State.matches.length > 0 ? `<span class="nav-badge">${State.matches.length}</span>` : ''}
+      </button>
+      <button class="nav-tab ${rActive}" data-action="go-recommendations">
+        <span class="nav-icon">👍</span>
+        Advise
+        ${unvoted > 0 ? `<span class="nav-badge">${unvoted}</span>` : ''}
       </button>
     </nav>`;
 }
 
+/* ── Discovery ── */
 function renderDiscovery() {
   const p = currentProfile();
   if (!p) {
@@ -1043,9 +1503,9 @@ function renderDiscovery() {
   return `
     <div class="profile-card">
       <div class="photo-area">
-        <img src="${p.photos[photoIdx]}" alt="${p.name}" onerror="this.src='https://picsum.photos/seed/fallback${p.id}/400/500'">
+        <img src="${p.photos[photoIdx]}" alt="${p.name}" onerror="this.src='https://randomuser.me/api/portraits/women/${10 + p.id}.jpg'">
         <div class="photo-overlay">
-          <div class="photo-tap-left" data-action="prev-photo" data-id="${p.id}"></div>
+          <div class="photo-tap-left"  data-action="prev-photo" data-id="${p.id}"></div>
           <div class="photo-tap-right" data-action="next-photo" data-id="${p.id}"></div>
         </div>
         <div class="photo-dots">${dots}</div>
@@ -1066,6 +1526,7 @@ function renderDiscovery() {
     </div>`;
 }
 
+/* ── Match reveal ── */
 function renderMatchScreen() {
   const match = getMatch(State.newMatchId);
   if (!match) return '';
@@ -1089,21 +1550,18 @@ function renderMatchScreen() {
     </div>`;
 }
 
+/* ── Approval ── */
 function renderApproval() {
   const match = getMatch(State.activeMatchId);
   if (!match) return '';
-  const p = match.profile;
+  const p        = match.profile;
   const approved = match.friends.filter(f => f.vote === 'approved').length;
   const rejected = match.friends.filter(f => f.vote === 'rejected').length;
   const pending  = match.friends.filter(f => f.vote === 'pending').length;
-  const total    = approved + rejected;
   const unlocked = isUnlocked(match);
   const noPending = pending === 0;
-
   const pct = Math.min(100, Math.round((approved / 3) * 100));
-  const progressLabel = unlocked
-    ? 'Approved! ✓'
-    : `${approved} of 3 approvals needed`;
+  const progressLabel = unlocked ? 'Approved! ✓' : `${approved} of 3 approvals needed`;
 
   const friendItems = match.friends.map(f => `
     <li class="friend-item">
@@ -1127,13 +1585,12 @@ function renderApproval() {
         <div class="approval-summary-info">
           <div class="approval-summary-name">${p.name}, ${p.age}</div>
           <div class="vote-stats">
-            <span class="vote-stat approved">✓ ${approved} approved</span>
-            <span class="vote-stat rejected">✕ ${rejected} passed</span>
+            <span class="vote-stat approved">✓ ${approved}</span>
+            <span class="vote-stat rejected">✕ ${rejected}</span>
             <span class="vote-stat pending">⏳ ${pending}</span>
           </div>
         </div>
       </div>
-
       <div class="progress-section">
         <div class="progress-label">
           <span>${progressLabel}</span>
@@ -1143,11 +1600,8 @@ function renderApproval() {
           <div class="progress-fill" style="width:${pct}%"></div>
         </div>
       </div>
-
       ${unlockedBanner}
-
       <ul class="friends-list">${friendItems}</ul>
-
       ${!noPending ? `
         <button class="simulate-btn" data-action="simulate-vote" data-id="${match.matchId}">
           ✦ Simulate a friend vote
@@ -1157,6 +1611,7 @@ function renderApproval() {
     </div>`;
 }
 
+/* ── Matches list ── */
 function renderMatchesList() {
   const locked   = State.matches.filter(m => !isUnlocked(m));
   const unlocked = State.matches.filter(m =>  isUnlocked(m));
@@ -1207,6 +1662,97 @@ function renderMatchesList() {
     </div>`;
 }
 
+/* ── Recommendations list ── */
+function renderRecommendations() {
+  const advising = State.appMode === 'recommending';
+  const noteText = advising
+    ? '👍 Tap a profile to vote — your friend is counting on your advice!'
+    : '✦ Your friends handpicked these for you. Let them know what you think!';
+
+  const items = REC_PROFILES.map(p => {
+    const vote   = getRecVote(p.id);
+    const voted  = !!vote;
+    const chipHTML = voted
+      ? `<span class="rec-vote-chip ${vote}">${vote === 'approved' ? '👍' : '👎'} ${vote === 'approved' ? 'Approved' : 'Passed'}</span>`
+      : `<div class="rec-new-dot"></div>`;
+
+    return `
+      <div class="rec-list-item ${voted ? 'voted' : ''}" data-action="open-rec" data-id="${p.id}">
+        <img class="rec-list-img" src="${p.photos[0]}" alt="${p.name}">
+        <div class="rec-list-info">
+          <div class="rec-list-name ${voted ? 'voted' : ''}">${p.name}, ${p.age}</div>
+          <div class="rec-list-sub">📍 ${p.city}</div>
+        </div>
+        ${chipHTML}
+      </div>`;
+  }).join('');
+
+  return `
+    <div class="rec-screen">
+      <p class="rec-screen-sub">${advising ? "Here's who your friend matched with:" : "Handpicked by your circle:"}</p>
+      <div class="rec-vote-note">${noteText}</div>
+      ${items}
+    </div>`;
+}
+
+/* ── Rec detail ── */
+function renderRecDetail() {
+  const p = activeRec();
+  if (!p) return '';
+  const vote    = getRecVote(p.id);
+  const voted   = !!vote;
+  const photoIdx = getRecPhotoIndex(p.id);
+
+  const dots = p.photos.map((_, i) =>
+    `<div class="photo-dot ${i === photoIdx ? 'active' : ''}"></div>`
+  ).join('');
+
+  const prompts = p.prompts.map(pr => `
+    <div class="prompt-card">
+      <p class="prompt-q">${pr.q}</p>
+      <p class="prompt-a">"${pr.a}"</p>
+    </div>`).join('');
+
+  const tags = p.tags.map(t => `<span class="tag">${t}</span>`).join('');
+
+  const voteArea = voted
+    ? `<div class="voted-overlay-banner ${vote}">
+        ${vote === 'approved' ? '👍 You approved this match' : '👎 You passed on this match'}
+        <br><span style="font-size:13px;font-weight:400;font-family:Inter,sans-serif;opacity:0.8">Tap 👎 or 👍 to change your vote</span>
+      </div>`
+    : `<p style="text-align:center;font-size:13px;color:var(--ink-muted);margin-top:12px">Cast your vote below</p>`;
+
+  return `
+    <div class="rec-detail-screen">
+      <div class="profile-card">
+        <div class="photo-area">
+          <img src="${p.photos[photoIdx]}" alt="${p.name}">
+          <div class="photo-overlay">
+            <div class="photo-tap-left"  data-action="prev-rec-photo" data-id="${p.id}"></div>
+            <div class="photo-tap-right" data-action="next-rec-photo" data-id="${p.id}"></div>
+          </div>
+          <div class="photo-dots">${dots}</div>
+          <div class="profile-name-overlay">
+            <h1>${p.name}, ${p.age}</h1>
+            <p class="profile-city">📍 ${p.city}</p>
+          </div>
+        </div>
+        <div class="profile-body">
+          <p class="profile-bio">"${p.bio}"</p>
+          ${prompts}
+          <div class="profile-tags">${tags}</div>
+        </div>
+      </div>
+
+      ${voteArea}
+
+      <div class="rec-action-row">
+        <button class="btn-thumb btn-thumb-down" data-action="rec-reject" data-id="${p.id}" title="Pass">👎</button>
+        <button class="btn-thumb btn-thumb-up"   data-action="rec-approve" data-id="${p.id}" title="Approve">👍</button>
+      </div>
+    </div>`;
+}
+
 // ══════════════════════════════════════════════
 // EVENT DELEGATION
 // ══════════════════════════════════════════════
@@ -1218,17 +1764,27 @@ document.addEventListener('click', e => {
   const id     = el.dataset.id;
 
   switch (action) {
-    case 'like':          likeProfile();          break;
-    case 'pass':          passProfile();           break;
-    case 'next-photo':    nextPhoto(parseInt(id)); break;
-    case 'prev-photo':    prevPhoto(parseInt(id)); break;
-    case 'see-votes':     goToApproval(id);        break;
-    case 'keep-swiping':  keepSwiping();           break;
-    case 'back':          history.back(); goToScreen('matches'); break;
-    case 'go-discovery':  goToScreen('discovery'); break;
-    case 'go-matches':    goToScreen('matches');   break;
-    case 'open-approval': goToApproval(id);        break;
-    case 'simulate-vote': simulateVote(id);        break;
+    case 'select-dating':        selectMode('dating');          break;
+    case 'select-recommending':  selectMode('recommending');    break;
+    case 'toggle-mode':          toggleMode();                  break;
+    case 'like':                 likeProfile();                 break;
+    case 'pass':                 passProfile();                 break;
+    case 'next-photo':           nextPhoto(parseInt(id));       break;
+    case 'prev-photo':           prevPhoto(parseInt(id));       break;
+    case 'see-votes':            goToApproval(id);              break;
+    case 'keep-swiping':         keepSwiping();                 break;
+    case 'back':                 goToScreen('matches');         break;
+    case 'go-discovery':         goToScreen('discovery');       break;
+    case 'go-matches':           goToScreen('matches');         break;
+    case 'go-recommendations':   goToScreen('recommendations'); break;
+    case 'open-approval':        goToApproval(id);              break;
+    case 'simulate-vote':        simulateVote(id);              break;
+    case 'open-rec':             openRec(parseInt(id));         break;
+    case 'back-rec':             backFromRec();                 break;
+    case 'next-rec-photo':       nextRecPhoto(parseInt(id));    break;
+    case 'prev-rec-photo':       prevRecPhoto(parseInt(id));    break;
+    case 'rec-approve':          voteRec(parseInt(id), 'approved'); break;
+    case 'rec-reject':           voteRec(parseInt(id), 'rejected'); break;
     case 'chat-soon':
       alert('💬 Chat is coming soon!\n\nThis feature will be available once the full app is built.');
       break;
