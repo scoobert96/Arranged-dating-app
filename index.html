@@ -922,6 +922,96 @@
       from { opacity: 0; transform: translateY(12px); }
       to   { opacity: 1; transform: translateY(0); }
     }
+
+    /* ── Card swipe-out ── */
+    @keyframes swipeRight {
+      from { transform: translateX(0) rotate(0deg); opacity: 1; }
+      to   { transform: translateX(130%) rotate(22deg); opacity: 0; }
+    }
+    @keyframes swipeLeft {
+      from { transform: translateX(0) rotate(0deg); opacity: 1; }
+      to   { transform: translateX(-130%) rotate(-22deg); opacity: 0; }
+    }
+    .card-swipe-right { animation: swipeRight 0.32s cubic-bezier(0.4,0,1,1) forwards; pointer-events: none; }
+    .card-swipe-left  { animation: swipeLeft  0.32s cubic-bezier(0.4,0,1,1) forwards; pointer-events: none; }
+
+    /* ── Swipe stamp overlay ── */
+    @keyframes stampFade {
+      0%   { opacity: 0; transform: translate(-50%,-50%) scale(0.5) rotate(-15deg); }
+      40%  { opacity: 1; transform: translate(-50%,-50%) scale(1.15) rotate(-15deg); }
+      100% { opacity: 0.85; transform: translate(-50%,-50%) scale(1) rotate(-15deg); }
+    }
+    .swipe-stamp {
+      position: absolute;
+      top: 38%;
+      left: 50%;
+      transform: translate(-50%,-50%) rotate(-15deg);
+      font-size: 36px;
+      font-weight: 800;
+      letter-spacing: 3px;
+      border: 4px solid currentColor;
+      border-radius: 8px;
+      padding: 6px 18px;
+      pointer-events: none;
+      animation: stampFade 0.32s ease-out forwards;
+      z-index: 20;
+      text-transform: uppercase;
+    }
+    .swipe-stamp.like { color: var(--teal);    }
+    .swipe-stamp.nope { color: var(--redwood); }
+
+    /* ── Layered friend avatar stack ── */
+    .friend-stack-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      height: 58px;
+      margin: 4px 0 20px;
+    }
+    .friend-stack-avatar {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid white;
+      position: absolute;
+      box-shadow: 0 3px 10px rgba(42,31,20,0.18);
+    }
+    .friend-stack-avatar:nth-child(1) { left: calc(50% - 110px); z-index: 5; }
+    .friend-stack-avatar:nth-child(2) { left: calc(50% - 62px);  z-index: 4; }
+    .friend-stack-avatar:nth-child(3) { left: calc(50% - 14px);  z-index: 3; }
+    .friend-stack-avatar:nth-child(4) { left: calc(50% + 34px);  z-index: 2; }
+    .friend-stack-avatar:nth-child(5) { left: calc(50% + 82px);  z-index: 1; }
+
+    /* ── Friend vote card ── */
+    .friend-card {
+      display: flex;
+      align-items: center;
+      background: white;
+      border-radius: 14px;
+      padding: 12px 16px;
+      margin-bottom: 10px;
+      box-shadow: var(--shadow-sm);
+      gap: 12px;
+    }
+    .friend-card-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+    .friend-card-info { flex: 1; }
+    .friend-card-name { font-weight: 600; font-size: 15px; color: var(--ink); }
+    .friend-card-sub  { font-size: 12px; color: var(--ink-muted); margin-top: 2px; }
+
+    /* ── Vote reveal animation ── */
+    @keyframes voteReveal {
+      from { transform: scale(0.4) rotate(-12deg); opacity: 0; }
+      to   { transform: scale(1) rotate(0deg); opacity: 1; }
+    }
+    .vote-badge-new { animation: voteReveal 0.35s cubic-bezier(0.34,1.56,0.64,1); }
   </style>
 </head>
 <body>
@@ -1264,21 +1354,54 @@ function toggleMode() {
   render();
 }
 
-function likeProfile() {
-  const p = currentProfile();
-  if (!p) return;
-  if (p.likedYou) {
-    const matchId = 'match_' + p.id;
-    State.matches.push({ matchId, profile: p, friends: makeFriends() });
-    State.newMatchId = matchId;
-    State.screen = 'match';
-  } else {
-    State.profileIndex++;
+/* ── Card animation helper ── */
+let _cardAnimating = false;
+
+function animateCard(direction, callback) {
+  if (_cardAnimating) return;
+  const card = document.querySelector('.profile-card');
+  if (!card) { callback(); return; }
+
+  _cardAnimating = true;
+
+  // Add stamp overlay
+  const photoArea = card.querySelector('.photo-area');
+  if (photoArea) {
+    const stamp = document.createElement('div');
+    stamp.className = 'swipe-stamp ' + (direction === 'right' ? 'like' : 'nope');
+    stamp.textContent = direction === 'right' ? 'LIKE' : 'NOPE';
+    photoArea.appendChild(stamp);
   }
-  render();
+
+  card.classList.add(direction === 'right' ? 'card-swipe-right' : 'card-swipe-left');
+  card.addEventListener('animationend', () => {
+    _cardAnimating = false;
+    callback();
+  }, { once: true });
 }
 
-function passProfile() { State.profileIndex++; render(); }
+function likeProfile() {
+  animateCard('right', () => {
+    const p = currentProfile();
+    if (!p) return;
+    if (p.likedYou) {
+      const matchId = 'match_' + p.id;
+      State.matches.push({ matchId, profile: p, friends: makeFriends() });
+      State.newMatchId = matchId;
+      State.screen = 'match';
+    } else {
+      State.profileIndex++;
+    }
+    render();
+  });
+}
+
+function passProfile() {
+  animateCard('left', () => {
+    State.profileIndex++;
+    render();
+  });
+}
 function goToScreen(s) { State.screen = s; render(); }
 function goToApproval(matchId) { State.activeMatchId = matchId; State.screen = 'approval'; render(); }
 function keepSwiping() { State.profileIndex++; State.screen = 'discovery'; render(); }
@@ -1502,7 +1625,7 @@ function renderDiscovery() {
 
   return `
     <div class="profile-card">
-      <div class="photo-area">
+      <div class="photo-area" data-profile-id="${p.id}">
         <img src="${p.photos[photoIdx]}" alt="${p.name}" onerror="this.src='https://randomuser.me/api/portraits/women/${10 + p.id}.jpg'">
         <div class="photo-overlay">
           <div class="photo-tap-left"  data-action="prev-photo" data-id="${p.id}"></div>
@@ -1563,12 +1686,31 @@ function renderApproval() {
   const pct = Math.min(100, Math.round((approved / 3) * 100));
   const progressLabel = unlocked ? 'Approved! ✓' : `${approved} of 3 approvals needed`;
 
-  const friendItems = match.friends.map(f => `
-    <li class="friend-item">
-      <img class="friend-avatar" src="${f.avatar}" alt="${f.name}">
-      <span class="friend-name">${f.name}</span>
-      <span class="vote-badge ${f.vote}">${f.vote === 'pending' ? '⏳ Pending' : f.vote === 'approved' ? '✓ Approved' : '✕ Passed'}</span>
-    </li>`).join('');
+  // Build stacked avatar row (pending friends on top layer, voted beneath)
+  const stackAvatars = match.friends.map(f => {
+    const ring = f.vote === 'approved' ? 'border-color:#2ab5b5'
+               : f.vote === 'rejected' ? 'border-color:#a04a38'
+               : 'border-color:white';
+    return `<img class="friend-stack-avatar" src="${f.avatar}" alt="${f.name}" style="${ring}">`;
+  }).join('');
+
+  const friendCards = match.friends.map(f => {
+    const voteLabel = f.vote === 'pending'  ? '⏳ Waiting…'
+                    : f.vote === 'approved' ? '✓ Approved'
+                    : '✕ Passed';
+    const subText = f.vote === 'pending'
+      ? 'Hasn\'t voted yet'
+      : f.vote === 'approved' ? 'Gave the green light' : 'Had some reservations';
+    return `
+      <div class="friend-card">
+        <img class="friend-card-avatar" src="${f.avatar}" alt="${f.name}">
+        <div class="friend-card-info">
+          <div class="friend-card-name">${f.name}</div>
+          <div class="friend-card-sub">${subText}</div>
+        </div>
+        <span class="vote-badge ${f.vote}">${voteLabel}</span>
+      </div>`;
+  }).join('');
 
   const unlockedBanner = unlocked ? `
     <div class="unlocked-banner">
@@ -1591,6 +1733,9 @@ function renderApproval() {
           </div>
         </div>
       </div>
+
+      <div class="friend-stack-row">${stackAvatars}</div>
+
       <div class="progress-section">
         <div class="progress-label">
           <span>${progressLabel}</span>
@@ -1600,8 +1745,11 @@ function renderApproval() {
           <div class="progress-fill" style="width:${pct}%"></div>
         </div>
       </div>
+
       ${unlockedBanner}
-      <ul class="friends-list">${friendItems}</ul>
+
+      <div style="padding: 0 4px">${friendCards}</div>
+
       ${!noPending ? `
         <button class="simulate-btn" data-action="simulate-vote" data-id="${match.matchId}">
           ✦ Simulate a friend vote
@@ -1725,7 +1873,7 @@ function renderRecDetail() {
   return `
     <div class="rec-detail-screen">
       <div class="profile-card">
-        <div class="photo-area">
+        <div class="photo-area" data-profile-id="${p.id}" data-is-rec="true">
           <img src="${p.photos[photoIdx]}" alt="${p.name}">
           <div class="photo-overlay">
             <div class="photo-tap-left"  data-action="prev-rec-photo" data-id="${p.id}"></div>
@@ -1752,6 +1900,42 @@ function renderRecDetail() {
       </div>
     </div>`;
 }
+
+// ══════════════════════════════════════════════
+// TOUCH SWIPE — PHOTO NAVIGATION
+// ══════════════════════════════════════════════
+
+let _touchStartX = 0;
+let _touchStartY = 0;
+let _touchPhotoEl = null;
+
+document.addEventListener('touchstart', e => {
+  _touchStartX = e.touches[0].clientX;
+  _touchStartY = e.touches[0].clientY;
+  _touchPhotoEl = e.target.closest('.photo-area');
+}, { passive: true });
+
+document.addEventListener('touchend', e => {
+  if (!_touchPhotoEl) return;
+  const dx = e.changedTouches[0].clientX - _touchStartX;
+  const dy = e.changedTouches[0].clientY - _touchStartY;
+  // Only treat as horizontal swipe if x-movement dominates
+  if (Math.abs(dx) < 35 || Math.abs(dy) > Math.abs(dx) * 0.8) {
+    _touchPhotoEl = null;
+    return;
+  }
+  const pid = parseInt(_touchPhotoEl.dataset.profileId);
+  const isRec = _touchPhotoEl.dataset.isRec === 'true';
+  if (!pid) { _touchPhotoEl = null; return; }
+  if (isRec) {
+    if (dx < 0) nextRecPhoto(pid);
+    else prevRecPhoto(pid);
+  } else {
+    if (dx < 0) nextPhoto(pid);
+    else prevPhoto(pid);
+  }
+  _touchPhotoEl = null;
+}, { passive: true });
 
 // ══════════════════════════════════════════════
 // EVENT DELEGATION
