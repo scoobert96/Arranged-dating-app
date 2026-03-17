@@ -1610,6 +1610,99 @@
       cursor: pointer;
       flex-shrink: 0;
     }
+
+    /* ════════════════════════════
+       VOTE BAR
+    ════════════════════════════ */
+    .vote-bar-wrap {
+      margin: 12px 0 8px;
+    }
+    .vote-bar {
+      display: flex;
+      height: 10px;
+      border-radius: 6px;
+      overflow: hidden;
+      background: var(--beige-mid);
+    }
+    .vb-seg {
+      height: 100%;
+      transition: width 0.3s ease;
+    }
+    .vb-seg.approved { background: var(--teal-mid); }
+    .vb-seg.rejected { background: #a04a38; }
+    .vb-seg.pending  { background: var(--beige-mid); }
+    .vote-bar-labels {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 5px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+    .vbl-a { color: var(--teal-mid); }
+    .vbl-r { color: #a04a38; }
+    .vbl-p { color: var(--ink-muted); }
+
+    /* ════════════════════════════
+       ADVISING VOTE PANEL OVERLAY
+    ════════════════════════════ */
+    .advising-vote-overlay {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      background: white;
+      border-radius: 20px 20px 0 0;
+      box-shadow: 0 -4px 24px rgba(0,0,0,0.15);
+      padding: 0 0 80px;
+      max-height: 75%;
+      overflow-y: auto;
+      z-index: 30;
+    }
+    .advising-vote-overlay-handle {
+      width: 36px; height: 4px;
+      background: var(--beige-mid);
+      border-radius: 2px;
+      margin: 10px auto 0;
+    }
+    .advising-vote-overlay-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 16px 4px;
+    }
+    .advising-vote-overlay-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--ink);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    .btn-close-overlay {
+      background: var(--beige-pale);
+      border: none;
+      border-radius: 50%;
+      width: 28px; height: 28px;
+      font-size: 14px;
+      cursor: pointer;
+      color: var(--ink-soft);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .view-votes-pill {
+      position: absolute;
+      bottom: 80px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--teal);
+      color: white;
+      border: none;
+      border-radius: 20px;
+      padding: 8px 18px;
+      font-size: 13px;
+      font-weight: 600;
+      font-family: 'Inter', sans-serif;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.18);
+      cursor: pointer;
+      white-space: nowrap;
+      z-index: 20;
+    }
   </style>
 </head>
 <body>
@@ -1992,6 +2085,7 @@ const State = {
   advisingReplies: {},           // { `${matchId}_${advisorId}`: replyText }
   showAdvisingCommentModal: false,
   advisingCommentPending: null,  // {matchId, vote} while modal open
+  advisingVotePanelOpen: false,  // overlay vote panel visible in advising-detail
 };
 
 // ══════════════════════════════════════════════
@@ -2022,6 +2116,25 @@ function isUnlocked(match) {
   return total >= 3 && approved * 2 > total;
 }
 function getPhotoIndex(profileId) { return State.photoIndex[profileId] || 0; }
+function renderVoteBar(approved, rejected, total) {
+  const pctA = total === 0 ? 0 : Math.round((approved / total) * 100);
+  const pctR = total === 0 ? 0 : Math.round((rejected / total) * 100);
+  const pctP = Math.max(0, 100 - pctA - pctR);
+  const pending = total - approved - rejected;
+  return `
+    <div class="vote-bar-wrap">
+      <div class="vote-bar">
+        ${pctA > 0 ? `<div class="vb-seg approved" style="width:${pctA}%"></div>` : ''}
+        ${pctR > 0 ? `<div class="vb-seg rejected" style="width:${pctR}%"></div>` : ''}
+        ${pctP > 0 ? `<div class="vb-seg pending" style="width:${pctP}%"></div>` : ''}
+      </div>
+      <div class="vote-bar-labels">
+        <span class="vbl-a">✓ ${approved} approved</span>
+        <span class="vbl-p">⏳ ${pending} pending</span>
+        <span class="vbl-r">✕ ${rejected} passed</span>
+      </div>
+    </div>`
+}
 function getAdvisingFriend() { return DATING_FRIENDS.find(f => f.id === State.advisingFriendId) || null; }
 function getAdvisingMatch() {
   const friend = getAdvisingFriend();
@@ -2224,11 +2337,13 @@ function submitAdvisingComment(comment) {
   if (comment) State.advisingComments[State.advisingCommentPending.matchId] = comment;
   State.showAdvisingCommentModal = false;
   State.advisingCommentPending = null;
+  State.advisingVotePanelOpen = true;
   render();
 }
 function skipAdvisingComment() {
   State.showAdvisingCommentModal = false;
   State.advisingCommentPending = null;
+  State.advisingVotePanelOpen = true;
   render();
 }
 
@@ -2265,6 +2380,7 @@ function openAdvisingFriend(friendId) {
 }
 function openAdvisingMatch(matchId) {
   State.advisingMatchId = matchId;
+  State.advisingVotePanelOpen = false;
   State.screen = 'advising-detail';
   render();
 }
@@ -2666,15 +2782,14 @@ function renderApproval() {
   const pending  = match.friends.filter(f => f.vote === 'pending').length;
   const unlocked = isUnlocked(match);
   const noPending = pending === 0;
-  const pct = Math.min(100, Math.round((wApproved / 3) * 100));
-  const progressLabel = unlocked ? 'Approved! ✓' : `${wApproved} of 3 weighted approvals needed`;
-
   const bf = State.bestFriendId ? match.friends.find(f => f.id === State.bestFriendId) : null;
   let wApproved = 0, wTotal = 0;
   match.friends.forEach(f => {
     const w = State.bestFriendId === f.id ? 2 : 1;
     if (f.vote !== 'pending') { wTotal += w; if (f.vote === 'approved') wApproved += w; }
   });
+  const pct = Math.min(100, Math.round((wApproved / 3) * 100));
+  const progressLabel = unlocked ? 'Approved! ✓' : `${wApproved} of 3 weighted approvals needed`;
 
   const stackAvatars = match.friends.map(f => {
     const ring = f.vote === 'approved' ? 'border-color:#2ab5b5'
@@ -2760,6 +2875,8 @@ function renderApproval() {
       </div>
 
       <div class="friend-stack-row">${stackAvatars}</div>
+
+      ${renderVoteBar(approved, rejected, match.friends.length)}
 
       <div class="progress-section">
         <div class="progress-label">
@@ -2860,7 +2977,7 @@ function renderMatchesList() {
           <img class="match-list-img" src="${m.profile.photos[0]}" alt="${m.profile.name}">
           <div class="match-list-info">
             <div class="match-list-name">${m.profile.name}, ${m.profile.age}</div>
-            <div class="match-list-status">${approved}/${total || '?'} friends voted</div>
+            <div class="match-list-status">${approved} approved · ${total} of ${m.friends.length} voted</div>
             ${bfHTML ? `<div>${bfHTML}</div>` : ''}
           </div>
           <div class="match-list-action"><span class="lock-icon">${votingOpen ? '⏳' : '🔒'}</span></div>
@@ -3074,16 +3191,17 @@ function renderAdvisingDetail() {
 
   const myComment = State.advisingComments[matchObj.matchId];
 
-  // Build vote panel (visible when voted OR window closed)
-  let votePanel = '';
-  const showPanel = voted || !votingOpen;
-  if (showPanel && matchObj.mockAdvisors) {
-    // All participants: mockAdvisors + you
+  // Build vote panel content (visible when voted OR window closed)
+  const canShowPanel = (voted || !votingOpen) && matchObj.mockAdvisors;
+  let votePanelOverlay = '';
+  let viewVotesPill = '';
+
+  if (canShowPanel) {
     const allRows = [...matchObj.mockAdvisors, ...(voted ? [{
       id: 'you', name: 'You', avatar: 'https://randomuser.me/api/portraits/lego/1.jpg',
       vote: vote, comment: myComment || null, isYou: true
     }] : [])];
-    const totalVoted = allRows.filter(a => a.vote !== 'pending').length;
+    const totalVoted    = allRows.filter(a => a.vote !== 'pending').length;
     const totalApproved = allRows.filter(a => a.vote === 'approved').length;
     const totalRejected = allRows.filter(a => a.vote === 'rejected').length;
 
@@ -3117,11 +3235,22 @@ function renderAdvisingDetail() {
         </div>`;
     }).join('');
 
-    votePanel = `
-      <div class="vote-panel">
-        <div class="vote-panel-header">${totalVoted} voted · ${totalApproved} approved · ${totalRejected} passed</div>
-        ${rows}
-      </div>`;
+    if (State.advisingVotePanelOpen) {
+      votePanelOverlay = `
+        <div class="advising-vote-overlay">
+          <div class="advising-vote-overlay-handle"></div>
+          <div class="advising-vote-overlay-header">
+            <span class="advising-vote-overlay-title">Friend votes</span>
+            <button class="btn-close-overlay" data-action="close-advising-vote-panel">✕</button>
+          </div>
+          <div style="padding:0 16px 4px">
+            ${renderVoteBar(totalApproved, totalRejected, allRows.length)}
+          </div>
+          <div style="padding:0 4px">${rows}</div>
+        </div>`;
+    } else {
+      viewVotesPill = `<button class="view-votes-pill" data-action="open-advising-vote-panel">📊 View Votes</button>`;
+    }
   }
 
   const actionBtns = votingOpen ? `
@@ -3131,7 +3260,7 @@ function renderAdvisingDetail() {
     </div>` : '';
 
   return `
-    <div class="rec-detail-screen">
+    <div class="rec-detail-screen" style="position:relative">
       <div class="profile-card">
         <div class="photo-area" data-advising-match-id="${matchObj.matchId}">
           <img src="${p.photos[photoIdx]}" alt="${p.name}">
@@ -3154,7 +3283,8 @@ function renderAdvisingDetail() {
       ${countdownBar}
       ${voteArea}
       ${actionBtns}
-      ${votePanel}
+      ${viewVotesPill}
+      ${votePanelOverlay}
     </div>`;
 }
 
@@ -3309,6 +3439,8 @@ document.addEventListener('click', e => {
     case 'prev-advising-photo':    prevAdvisingPhoto(id);             break;
     case 'advising-approve':       voteAdvisingMatch(id, 'approved'); break;
     case 'advising-reject':        voteAdvisingMatch(id, 'rejected'); break;
+    case 'open-advising-vote-panel':  State.advisingVotePanelOpen = true;  render(); break;
+    case 'close-advising-vote-panel': State.advisingVotePanelOpen = false; render(); break;
   }
 });
 
