@@ -2388,10 +2388,17 @@ function render() {
     }
     case 'advising-detail': {
       const matchObj = getAdvisingMatch();
-      const pname = matchObj ? matchObj.profile.name : '';
+      const pname    = matchObj ? matchObj.profile.name : '';
+      const aFriend  = getAdvisingFriend();
+      const bubbleHTML = aFriend ? `
+        <div style="position:absolute;right:14px;display:flex;flex-direction:column;align-items:center;gap:2px">
+          <img src="${aFriend.avatar}" alt="${aFriend.name}" style="width:46px;height:46px;border-radius:50%;object-fit:cover;border:2.5px solid var(--teal-mid);box-shadow:0 2px 8px rgba(0,0,0,0.18)">
+          <span style="font-size:10px;font-weight:700;color:var(--ink-soft);letter-spacing:0.02em">${aFriend.name}</span>
+        </div>` : '';
       headerHTML = `<div class="app-header">
         <button class="back-btn" data-action="back-advising-detail">&#8592;</button>
         <h2>${pname}</h2>
+        ${bubbleHTML}
       </div>`;
       screenHTML = `<div class="screen screen-enter">${renderAdvisingDetail()}</div>`;
       break;
@@ -2414,16 +2421,16 @@ function render() {
 
   if (State.confirmingBestFriendId !== null) {
     const fname = FRIEND_NAMES[State.confirmingBestFriendId - 1];
-    const currentBFName = State.bestFriendId ? ` This will replace ${FRIEND_NAMES[State.bestFriendId-1]} as your BFF.` : '';
+    const currentBFName = State.bestFriendId ? ` This will replace ${FRIEND_NAMES[State.bestFriendId-1]} as your Best Friend.` : '';
     modalHTML = `
       <div class="modal-overlay">
         <div class="modal-sheet">
           <div class="modal-icon">🤝</div>
-          <div class="modal-title">Make ${fname} your BFF?</div>
+          <div class="modal-title">Make ${fname} your Best Friend?</div>
           <div class="modal-body">Your Best Friend's vote counts as 2 votes instead of 1 — both for approvals and rejections.${currentBFName} They must leave a comment whenever they vote.</div>
           <div class="modal-warning">Their vote still needs the group majority to unlock a match, but it carries double the weight. Would you like to continue?</div>
           <div class="modal-actions">
-            <button class="modal-btn-yes" onclick="confirmBestFriend(${State.confirmingBestFriendId})">Yes, send BFF request to ${fname}</button>
+            <button class="modal-btn-yes" onclick="confirmBestFriend(${State.confirmingBestFriendId})">Yes, send Best Friend request to ${fname}</button>
             <button class="modal-btn-back" onclick="cancelBestFriendConfirm()">Go back</button>
           </div>
         </div>
@@ -2490,9 +2497,28 @@ function renderOnboarding() {
   return `
     <div class="app-shell" style="background:var(--beige)">
       <div class="screen">
-        <div class="onboarding-screen">
+        <div class="onboarding-screen" style="position:relative">
+          <!-- Vine art: top-left -->
+          <svg style="position:absolute;top:0;left:0;pointer-events:none;opacity:0.28" width="140" height="200" viewBox="0 0 140 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M8 0 C10 30, 30 40, 20 70 C10 100, 35 110, 25 145 C15 175, 40 185, 30 210" stroke="#2d5a27" stroke-width="2.2" stroke-linecap="round" fill="none"/>
+            <path d="M20 70 C35 60, 55 65, 60 55" stroke="#2d5a27" stroke-width="1.6" stroke-linecap="round" fill="none"/>
+            <ellipse cx="63" cy="52" rx="8" ry="5" transform="rotate(-30 63 52)" fill="#2d5a27"/>
+            <path d="M25 145 C42 135, 60 140, 65 128" stroke="#2d5a27" stroke-width="1.6" stroke-linecap="round" fill="none"/>
+            <ellipse cx="68" cy="125" rx="7" ry="4.5" transform="rotate(-20 68 125)" fill="#2d5a27"/>
+            <path d="M10 40 C0 35, -5 20, 5 15" stroke="#2d5a27" stroke-width="1.4" stroke-linecap="round" fill="none"/>
+            <ellipse cx="4" cy="12" rx="6" ry="4" transform="rotate(15 4 12)" fill="#2d5a27"/>
+          </svg>
+          <!-- Vine art: bottom-right -->
+          <svg style="position:absolute;bottom:0;right:0;pointer-events:none;opacity:0.28" width="140" height="200" viewBox="0 0 140 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M132 200 C130 170, 110 160, 120 130 C130 100, 105 90, 115 55 C125 25, 100 15, 110 -10" stroke="#2d5a27" stroke-width="2.2" stroke-linecap="round" fill="none"/>
+            <path d="M120 130 C105 140, 85 135, 80 145" stroke="#2d5a27" stroke-width="1.6" stroke-linecap="round" fill="none"/>
+            <ellipse cx="77" cy="148" rx="8" ry="5" transform="rotate(30 77 148)" fill="#2d5a27"/>
+            <path d="M115 55 C98 65, 80 60, 75 72" stroke="#2d5a27" stroke-width="1.6" stroke-linecap="round" fill="none"/>
+            <ellipse cx="72" cy="75" rx="7" ry="4.5" transform="rotate(20 72 75)" fill="#2d5a27"/>
+            <path d="M130 160 C140 165, 145 180, 135 185" stroke="#2d5a27" stroke-width="1.4" stroke-linecap="round" fill="none"/>
+            <ellipse cx="136" cy="188" rx="6" ry="4" transform="rotate(-15 136 188)" fill="#2d5a27"/>
+          </svg>
           <div class="onboarding-logo">Grapevine</div>
-          <p class="onboarding-tagline">Love, with a little help from everyone.</p>
           <p class="onboarding-q">How are you using Grapevine today?</p>
           <p class="onboarding-sub">You can always switch modes later from the top right.</p>
           <div class="mode-cards">
@@ -2619,14 +2645,14 @@ function renderMatchScreen() {
       </div>
       <p class="match-label">✦ &nbsp; It's a Match &nbsp; ✦</p>
       <h1 class="match-headline">You & ${p.name}</h1>
-      <p class="match-subline">You both liked each other.<br>Now let <strong>your friends</strong> weigh in.</p>
+      <p class="match-subline">You both liked each other.<br>Your friends can now start weighing in.</p>
       <div class="friend-teaser">
         <div class="teaser-icon">👥</div>
-        <h3>Friend Approval Required</h3>
-        <p>Before you can chat, at least <strong>3 friends</strong> need to give their blessing — or designate a <strong>best advisor</strong> whose approval alone unlocks the chat.</p>
+        <h3>12-Hour Voting Window</h3>
+        <p>Before you can chat, at least 3 friends need to approve — or designate a <strong>Best Friend</strong> whose vote counts double.</p>
       </div>
-      <button class="btn-primary" data-action="see-votes" data-id="${match.matchId}">See Friend Votes</button>
-      <button class="btn-secondary" data-action="keep-swiping">Keep Swiping</button>
+      <p style="font-size:13px;color:var(--ink-muted);text-align:center;margin-bottom:20px">Your friends will be notified and can start voting.</p>
+      <button class="btn-primary" data-action="keep-swiping">Keep Swiping</button>
     </div>`;
 }
 
@@ -2807,6 +2833,9 @@ function renderMatchesList() {
         <div class="vwb-track"><div class="vwb-fill ${!votingOpen ? 'closed' : ''}" style="width:${pct}%"></div></div>
       </div>`;
 
+    const approved = m.friends.filter(f => f.vote === 'approved').length;
+    const total    = m.friends.filter(f => f.vote !== 'pending').length;
+
     if (chatReady) {
       return `
         <div class="match-list-item" style="flex-direction:column;align-items:stretch;padding:0;overflow:hidden">
@@ -2814,7 +2843,7 @@ function renderMatchesList() {
             <img class="match-list-img" src="${m.profile.photos[0]}" alt="${m.profile.name}">
             <div class="match-list-info">
               <div class="match-list-name">${m.profile.name}, ${m.profile.age}</div>
-              <div class="match-list-status unlocked-status">✓ ${wApproved} approval weight</div>
+              <div class="match-list-status unlocked-status">✓ Friends approved</div>
               ${bfHTML ? `<div>${bfHTML}</div>` : ''}
             </div>
             <div style="display:flex;gap:6px;flex-direction:column;align-items:flex-end;flex-shrink:0">
@@ -2831,7 +2860,7 @@ function renderMatchesList() {
           <img class="match-list-img" src="${m.profile.photos[0]}" alt="${m.profile.name}">
           <div class="match-list-info">
             <div class="match-list-name">${m.profile.name}, ${m.profile.age}</div>
-            <div class="match-list-status">${wApproved}/${wTotal || '?'} approval weight</div>
+            <div class="match-list-status">${approved}/${total || '?'} friends voted</div>
             ${bfHTML ? `<div>${bfHTML}</div>` : ''}
           </div>
           <div class="match-list-action"><span class="lock-icon">${votingOpen ? '⏳' : '🔒'}</span></div>
@@ -2871,14 +2900,14 @@ function renderFriendsList() {
       : `Recently voted on your matches — ${voted} vote${voted > 1 ? 's' : ''}, ${approved} approved`;
 
     const bfBadge = isBF
-      ? `<span class="best-friend-badge" style="margin-left:6px">🤝 BFF</span>`
+      ? `<span class="best-friend-badge" style="margin-left:6px">⭐ Best Friend</span>`
       : isPend
       ? `<span class="best-friend-badge" style="margin-left:6px;background:var(--teal-mid)">⏳ Pending</span>`
       : '';
 
     let actionBtn = '';
     if (isBF) {
-      actionBtn = `<button class="btn-designate active" style="font-size:11px;padding:4px 10px;white-space:nowrap" data-action="remove-best-friend">Remove BFF</button>`;
+      actionBtn = `<button class="btn-designate active" style="font-size:11px;padding:4px 10px;white-space:nowrap" data-action="remove-best-friend">Remove</button>`;
     } else if (isPend) {
       actionBtn = `
         <div style="display:flex;flex-direction:column;gap:4px;align-items:flex-end">
@@ -2886,7 +2915,7 @@ function renderFriendsList() {
           <button class="btn-simulate-accept" data-action="accept-bf-request">Simulate Accept</button>
         </div>`;
     } else {
-      actionBtn = `<button class="btn-designate" style="font-size:11px;padding:4px 10px;white-space:nowrap" data-action="set-best-friend" data-id="${id}">🤝 Make BFF</button>`;
+      actionBtn = `<button class="btn-designate" style="font-size:11px;padding:4px 10px;white-space:nowrap" data-action="set-best-friend" data-id="${id}">⭐ Best Friend</button>`;
     }
 
     return `
@@ -2902,11 +2931,11 @@ function renderFriendsList() {
 
   let statusNote = '';
   if (State.bestFriendId) {
-    statusNote = `<p style="font-size:12px;color:var(--teal);text-align:center;margin-bottom:14px;font-weight:500">🤝 ${FRIEND_NAMES[State.bestFriendId-1]} is your BFF — their approval alone unlocks a match.</p>`;
+    statusNote = `<p style="font-size:12px;color:var(--teal);text-align:center;margin-bottom:14px;font-weight:500">⭐ ${FRIEND_NAMES[State.bestFriendId-1]} is your Best Friend — their vote counts double.</p>`;
   } else if (State.bfPending) {
-    statusNote = `<p style="font-size:12px;color:var(--teal-mid);text-align:center;margin-bottom:14px">⏳ BFF request sent to ${FRIEND_NAMES[State.bfPending-1]} — waiting for them to accept.</p>`;
+    statusNote = `<p style="font-size:12px;color:var(--teal-mid);text-align:center;margin-bottom:14px">⏳ Best Friend request sent to ${FRIEND_NAMES[State.bfPending-1]} — waiting for them to accept.</p>`;
   } else {
-    statusNote = `<p style="font-size:12px;color:var(--ink-muted);text-align:center;margin-bottom:14px">Tap 🤝 Make BFF to give one friend override power over your matches.</p>`;
+    statusNote = `<p style="font-size:12px;color:var(--ink-muted);text-align:center;margin-bottom:14px">Designate a Best Friend — their vote counts double toward approval.</p>`;
   }
 
   return `
@@ -2930,7 +2959,7 @@ function renderAdvisingFriends() {
       <div style="background:linear-gradient(135deg,rgba(201,169,110,0.12),rgba(201,169,110,0.24));border:1.5px solid rgba(201,169,110,0.45);border-radius:var(--radius);padding:14px 16px;margin-bottom:16px;display:flex;align-items:center;gap:12px">
         <div style="display:flex;margin-right:4px">${avatars}</div>
         <div>
-          <div style="font-weight:700;font-size:14px;color:#8a6920">Your BFF${bffFriends.length > 1 ? 's' : ''}: ${names}</div>
+          <div style="font-weight:700;font-size:14px;color:#8a6920">Best Friend to: ${names}</div>
           <div style="font-size:12px;color:var(--ink-muted);margin-top:2px">They've made you their Best Friend — your vote carries extra weight.</div>
         </div>
       </div>`;
@@ -2944,7 +2973,7 @@ function renderAdvisingFriends() {
       ? `${unvoted} new match${unvoted > 1 ? 'es' : ''} to review`
       : `All ${total} match${total > 1 ? 'es' : ''} reviewed ✓`;
     const isBFF = !!f.youAreBFF;
-    const bffTag = isBFF ? `<span class="bff-label">⭐ Your BFF</span>` : '';
+    const bffTag = isBFF ? `<span class="bff-label">⭐ Best Friend</span>` : '';
     return `
       <div class="friend-dating-card ${isBFF ? 'is-bff' : ''}" data-action="open-advising-friend" data-id="${f.id}">
         <img class="friend-dating-avatar" src="${f.avatar}" alt="${f.name}">
@@ -2960,7 +2989,7 @@ function renderAdvisingFriends() {
   return `
     <div class="advising-friends-screen">
       <p class="matches-screen-title">Friends</p>
-      <p class="matches-screen-sub" style="margin-bottom:16px">Your friends who are dating — help them find the one.</p>
+      <p class="matches-screen-sub" style="margin-bottom:16px">Your friends on Grapevine — weigh in on their matches.</p>
       ${bffBanner}
       ${items}
     </div>`;
@@ -3115,10 +3144,6 @@ function renderAdvisingDetail() {
             <h1>${p.name}, ${p.age}</h1>
             <p class="profile-city">📍 ${p.city}</p>
           </div>
-          <div class="advisor-bubble">
-            <img src="${friend.avatar}" alt="${friend.name}">
-            <span class="advisor-bubble-name">${friend.name}</span>
-          </div>
         </div>
         <div class="profile-body">
           <p class="profile-bio">"${p.bio}"</p>
@@ -3146,7 +3171,7 @@ function renderChat() {
         <span class="chat-share-text">👀 ${bfName} is following this chat</span>
       </div>`
     : `<div class="chat-share-bar">
-        <span class="chat-share-text">🤝 ${bfName ? `Let ${bfName} follow along?` : 'Share with your BFF?'}</span>
+        <span class="chat-share-text">🤝 ${bfName ? `Let ${bfName} follow along?` : 'Share with your Best Friend?'}</span>
         <button class="btn-share" data-action="open-chat-share">Share</button>
       </div>`;
 
